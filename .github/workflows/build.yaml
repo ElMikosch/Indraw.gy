@@ -43,12 +43,12 @@ jobs:
       - run: dotnet build
         working-directory: ./Backend
       - name: Publish
-        run: dotnet publish -c Release -o release
+        run: dotnet publish -c Release -o indrawgy-backend
         working-directory: ./Backend
       - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v2.2.2
+        uses: actions/upload-artifact@v3.1.0
         with:
-          name: release
-          path: .Backend/release/**
+          name: indrawgy-backend
+          path: .Backend/indrawgy-backend/**
           if-no-files-found: error
 
