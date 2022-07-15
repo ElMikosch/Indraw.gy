@@ -24,27 +24,91 @@
         - SendPicutre Server -> Main Client
         - ClearCanvas
         - CanvasEnabled
-        
 - Drawing board is only enabled depending on game state
-- Player presses Ready button 
-- When all players are ready game starts
-- Free draw before game starts
+    - [Frontend - PlayerScreen] Implement blocked state
+        - Place a cute placeholder
+- Player presses Ready button
+    - [Backend] Implement PlayerHub
+        - UserReady
+        - AllUserReady
+    - [Frontend - MainScreen] Update Main screen
+        -  Show which user is ready
+        -  Show that the game is starting when all user are ready 
 - Player Canvas is cleared
+    - [Frontend - PlayerScreen] Subscribe to ClearCanvas
+        - Clear user canvas
 - Player gets the prompt to draw and the time left
+    - [Backend] Implement GameHub
+        - Publish random word to Player and Main Client
+        - Set a timer and update every second
+    - [Frontend - MainScreen]
+        - Display each player canvas in realtime 
+        - Display remaining time 
+        - Display current word to draw 
 - Player has controls for line thickness and eraser, clear all
+    - Nothing to implement, see above
 - If AI guesses correct canvas of this player is locked
+    - [Frontent - PlayerScreen] Implement AI
+        - AI needs to guess the word of the drawn picture
+        - Player Client needs to send a success message to the backend when the AI guessed it right
+        - Lock the canvas when AI guessed it right
+    - [Backend] Implement Succcess logic
+        - Update GameHub with another method
+        - Save TimeStamp and picture of the player
+        - Give player points according to his place
+    - [Frontend - MainScreen]
+        - Show which player is finished or is still playing
 - If time runs out without correct guess canvas is locked
+    - [Frontend - PlayerScreen]
+        - Lock the canvas 
+        - Send a failed message to Server
+    - [Backend] Implement a failed logic
+        - Update GameHub or generalize the success logic
+        - Save picture only 
+        - Give player 0 points
+        - If more than one player fails, rank them all on the last place 
+    - [Frontend - MainScreen]
+        - Show that the time is up
 - Player get points according to placement 
     - 1st Place = 5 Points 
     - 2nd Place = 3 Points 
     - 3rd Place = 2 Points 
     - Correct Guess inside time frame = 1 Point
-- Next round starts automatically 
 - Best and Worst picture between rounds
+    - [Backend]
+        - Send the 1st Place picture to the Main Client
+        - Send thee last place picture to the Main Client 
+        - When there are more than one last place: Randomly decide which picture is the worst. 
+    - [Frontend - MainScreen]
+        - Display two picture given from the backend. 
+- Next round starts automatically 
+    - [Backend]
+        - Start the next round after 10 seconds
 - After X Rounds stats are displayed on main screen
-- Gallery of all drawn pictures is shown
+    - [Backend]
+        - Rank the players according to his points
+    - [Frontend - MainScreen]
+        - Display the rank
+    - [Frontend - PlayerScreen]
+        - Display players rank 
+- Gallery of all drawn pictures is shown (optional)
+    - [Backend]
+        - Send all picture of each round 
+        - Send them i a 10 seconds interval
+    - [Frontend - MainScreen]
+        - Display pictures give from the backend
 - Button to start a new round with same players
+    - [Frontend - MainScreen]
+        - Display restart button
+    - [Backend]
+        - Restart whole game with same players 
+        - Don't generate new QR code
 - Button to start a new round with new players
+    - [Frontend - MainScreen]
+        - Display new game button
+    - [Backend]
+        - Clear everything 
+        - Generate new QR Code
 
 # Workflow Player draws - AI guesses - Battle Royal
 - Same as before 
