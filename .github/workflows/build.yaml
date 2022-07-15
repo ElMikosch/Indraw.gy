@@ -49,6 +49,6 @@ jobs:
         uses: actions/upload-artifact@v3.1.0
         with:
           name: indrawgy-backend
-          path: .Backend/indrawgy-backend/**
+          path: ./Backend/indrawgy-backend/**
           if-no-files-found: error
 
