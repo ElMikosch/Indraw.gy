@@ -44,10 +44,11 @@
         - Clear user canvas
 
 - Player gets the prompt to draw and the time left
-    - [Backend] Implement GameHub
+    - [Backend] Update DrawHub
         - Publish random word to Player and Main Client
+    - [Backend] Implement GameHub
         - Set a timer and update every second
-    - [Frontend - MainScreen]
+    - [Frontend - MainScreen] Update Main Screen 
         - Display each player canvas in realtime 
         - Display remaining time 
         - Display current word to draw 
@@ -60,15 +61,15 @@
         - AI needs to guess the word of the drawn picture
         - Player Client needs to send a success message to the backend when the AI guessed it right
         - Lock the canvas when AI guessed it right
-    - [Backend] Implement Succcess logic
+    - [Backend] Implement Success logic
         - Update GameHub with another method
         - Save TimeStamp and picture of the player
         - Give player points according to his place
-    - [Frontend - MainScreen]
+    - [Frontend - MainScreen] 
         - Show which player is finished or is still playing
 
 - If time runs out without correct guess canvas is locked
-    - [Frontend - PlayerScreen]
+    - [Frontend - PlayerScreen] 
         - Lock the canvas 
         - Send a failed message to Server
     - [Backend] Implement a failed logic
