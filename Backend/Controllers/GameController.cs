@@ -23,7 +23,7 @@ public class GameController : BaseController
     [HttpGet("gameIsRunning")]
     public IActionResult GameIsRunning()
     {
-        return Ok(_gameService.GameIsRunning());
+        return Ok(_gameService.GameHasStarted());
     }
 
     [HttpPost("restartGame")]

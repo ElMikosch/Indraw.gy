@@ -13,17 +13,17 @@ public class GameService
 
     public void StartGame(GameMode mode, int rounds)
     {
-        if (GameState.IsRunning) throw new Exception("Game is already running!");
+        if (GameState.HasStarted) throw new Exception("Game is already running!");
         GameState = new GameState
         {
             Rounds = rounds,
             GameMode = mode,
-            IsRunning = true
+            HasStarted = true
         };
     }
 
-    public bool GameIsRunning()
+    public bool GameHasStarted()
     {
-        return GameState.IsRunning;
+        return GameState.HasStarted;
     }
 }

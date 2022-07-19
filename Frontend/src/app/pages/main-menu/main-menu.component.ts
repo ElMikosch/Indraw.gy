@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { GameMode } from 'src/app/models/game-mode';
-import { MainMenuFacade } from './main.menu.facade';
+import { MainMenuFacade } from './main-menu.facade';
 
 @Component({
   selector: 'app-main-menu',
@@ -19,11 +19,11 @@ export class MainMenuComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     const gameIsRunning = await this.facade.gameIsRunning();
-    if (gameIsRunning) await this.router.navigate(['game']);
+    if (gameIsRunning) await this.router.navigate(['main']);
   }
 
   async onSelectGameMode(gameMode: GameMode) {
     await this.facade.startGame(gameMode, this.rounds);
-    await this.router.navigate(['game']);
+    await this.router.navigate(['main']);
   }
 }

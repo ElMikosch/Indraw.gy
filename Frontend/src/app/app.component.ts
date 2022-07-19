@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Guid } from 'guid-typescript';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,12 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  constructor() {}
+  constructor() {
+    let sessionId = sessionStorage.getItem('sessionId');
+
+    if (!sessionId) {
+      sessionId = Guid.create().toString();
+      sessionStorage.setItem('sessionId', sessionId);
+    }
+  }
 }
