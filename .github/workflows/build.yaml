@@ -69,7 +69,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: indrawgy-backend
-      - name: Publish
+      - name: Publish - Backend
         uses: nogsantos/scp-deploy@master
         with:
           src: ./*
@@ -82,12 +82,12 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: dist
-      - name: Publish
+      - name: Publish - Frontend
         uses: nogsantos/scp-deploy@master
         with:
-          src: ./wwwroot/*
+          src: ./*
           host: ${{ secrets.HOST }}
-          remote: ${{ secrets.DIR }}
+          remote: ${{ secrets.FRONTEND_DIR }}
           port: ${{ secrets.PORT }}
           user: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSHKEY }}      
