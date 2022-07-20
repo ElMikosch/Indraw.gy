@@ -5,7 +5,7 @@ namespace Backend.Services;
 
 public class PlayerService
 {
-    private readonly List<Player> _players;
+    private List<Player> _players;
 
     public PlayerService()
     {
@@ -38,5 +38,10 @@ public class PlayerService
     {
         var player = _players.FirstOrDefault(x => x.SessionId == sessionId);
         return player != null;
+    }
+
+    public void Reset()
+    {
+        _players = new List<Player>();
     }
 }

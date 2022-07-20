@@ -24,13 +24,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
 app.UseFileServer();
 
 app.MapControllers();
-app.MapHub<PlayerHub>("/player");
+app.MapHub<PlayerHub>("/hubs/player");
 
 app.Run();

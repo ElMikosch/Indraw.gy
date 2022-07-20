@@ -7,8 +7,6 @@ import {
 } from '@techiediaries/ngx-qrcode';
 import { SessionService } from 'src/app/services/session.service';
 import { MainScreenFacade } from './main-screen.facade';
-import { IndrawgyApi } from '../../services/indrawgy.api';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-main-screen',
@@ -22,9 +20,17 @@ export class MainScreenComponent implements OnInit {
   public elementType = 'url' as NgxQrcodeElementTypes;
   public errorCorrection = 'L' as NgxQrcodeErrorCorrectionLevels;
 
-  constructor(public sessionService: SessionService) {}
+  constructor(
+    public sessionService: SessionService,
+    private facade: MainScreenFacade
+  ) {}
 
   async ngOnInit(): Promise<void> {
     this.sessionService.createLoginLink();
+  }
+
+  async resetGame() {
+    await this.facade.resetGame();
+    location.reload();
   }
 }

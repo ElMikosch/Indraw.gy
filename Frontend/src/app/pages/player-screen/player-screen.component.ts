@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PlayerScreenFacade } from './player-screen.facade';
+import { PlayerConnectionService } from '../../services/player-connection.service';
 
 @Component({
   selector: 'app-player-screen',
@@ -11,7 +12,7 @@ import { PlayerScreenFacade } from './player-screen.facade';
   styleUrls: ['./player-screen.component.scss'],
 })
 export class PlayerScreenComponent implements OnInit {
-  constructor() {}
+  constructor(private player: PlayerConnectionService) {}
 
   async ngOnInit(): Promise<void> {}
 }

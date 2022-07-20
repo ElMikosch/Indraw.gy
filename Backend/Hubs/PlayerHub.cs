@@ -11,7 +11,12 @@ public class PlayerHub: Hub
     {
         _playerService = playerService;
     }
-    
+
+    public override Task OnConnectedAsync()
+    {
+        return base.OnConnectedAsync();
+    }
+
     public void RegisterPlayer(string sessionId)
     {
         _playerService.UpdateConnection(sessionId, Context.ConnectionId, Clients.Caller);

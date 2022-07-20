@@ -30,6 +30,13 @@ public class GameService
         GameState.GameStatus = GameStatus.Started;
     }
 
+    public void ResetGame(string sessionId)
+    {
+        if (GameState.GameStatus == GameStatus.Started) throw new Exception("Game is already running!");
+        if (GameState.MainSessionId != sessionId) throw new Exception("Only the main screen can reset the game");
+        GameState = new GameState();
+    }
+
     public GameStatus GetGameStatus()
     {
         return GameState.GameStatus;
