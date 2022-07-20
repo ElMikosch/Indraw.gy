@@ -1,13 +1,17 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { GameMode } from 'src/app/models/game-mode';
+import { IndrawgyApi } from 'src/app/services/indrawgy.api';
 import { MainMenuFacade } from './main.menu.facade';
 
 @Component({
+  standalone: true,
   selector: 'app-main-menu',
   templateUrl: './main-menu.component.html',
   styleUrls: ['./main-menu.component.scss'],
-  providers: [MainMenuFacade],
+  providers: [MainMenuFacade, IndrawgyApi],
+  imports: [FormsModule],
 })
 export class MainMenuComponent implements OnInit {
   public rounds: number;
