@@ -3,7 +3,9 @@ import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import Endpoints from '../../assets/endpoints.json';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class IndrawgyApi {
   sessionId: string;
 

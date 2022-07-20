@@ -14,7 +14,9 @@ public class PlayerService
 
     public void TryAddPlayer(string sessionId, string username)
     {
-        if (_players.Count() >= 8) throw new Exception("Game is full!");
+        if (_players.Count >= 8) throw new Exception("Game is full!");
+        if (_players.Any(x => x.SessionId == sessionId)) return;
+
         _players.Add(new Player
         {
             Username = username,

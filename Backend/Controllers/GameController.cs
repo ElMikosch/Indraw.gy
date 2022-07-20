@@ -1,4 +1,5 @@
-﻿using Backend.Models.RequestDtos;
+﻿using Backend.Extensions;
+using Backend.Models.RequestDtos;
 using Backend.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,17 +14,30 @@ public class GameController : BaseController
         _gameService = gameService;
     }
 
-    [HttpPost("startGame")]
-    public IActionResult StartGame([FromBody] StartGameRequestDto startGameRequestDto)
+    [HttpPost("createGame")]
+    public IActionResult CreateGame([FromBody] StartGameRequestDto startGameRequestDto)
     {
-        _gameService.StartGame(startGameRequestDto.GameMode, startGameRequestDto.Rounds);
+        _gameService.CreateGame(startGameRequestDto.GameMode, startGameRequestDto.Rounds, Request.GetSessionId());
+        return Ok();
+    }
+    
+    [HttpPost("startGame")]
+    public IActionResult StartGame()
+    {
+        _gameService.StartGame(Request.GetSessionId());
         return Ok();
     }
 
-    [HttpGet("gameIsRunning")]
-    public IActionResult GameIsRunning()
+    [HttpGet("gameStatus")]
+    public IActionResult GetGameStatus()
     {
-        return Ok(_gameService.GameHasStarted());
+        return Ok(_gameService.GetGameStatus());
+    }
+
+    [HttpGet("isMainClient")]
+    public IActionResult IsMainClient()
+    {
+        return Ok(_gameService.IsMainClient(Request.GetSessionId()));
     }
 
     [HttpPost("restartGame")]

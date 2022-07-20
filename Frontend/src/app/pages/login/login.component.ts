@@ -1,12 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginFacade } from './login.facade';
+import { FormsModule } from '@angular/forms';
+import { IndrawgyApi } from '../../services/indrawgy.api';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
+  imports: [FormsModule],
   providers: [LoginFacade],
+  standalone: true,
 })
 export class LoginComponent implements OnInit {
   public username: string;
@@ -15,12 +19,10 @@ export class LoginComponent implements OnInit {
     this.username = '';
   }
 
-  async ngOnInit(): Promise<void> {
-    const alreadyInGame = await this.facade.playerAlreadyInGame();
-    if (alreadyInGame) await this.router.navigate(['game']);
-  }
+  async ngOnInit(): Promise<void> {}
 
   async login() {
     await this.facade.login(this.username);
+    await this.router.navigate(['player']);
   }
 }

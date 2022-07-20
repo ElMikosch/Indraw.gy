@@ -1,4 +1,5 @@
 ﻿using Backend.Extensions;
+using Backend.Models;
 using Backend.Models.RequestDtos;
 using Backend.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +21,7 @@ public class LoginController: BaseController
     public IActionResult Login([FromBody] LoginRequestDto loginRequestDto)
     {
         if (_gameService.GameHasStarted()) return BadRequest("Game already started!");
+        if(!_gameService.GameIsCreated()) return BadRequest("There is currently no active game");
         var sessionId = Request.GetSessionId();
         _playerService.TryAddPlayer(sessionId, loginRequestDto.Username);
         return Ok();

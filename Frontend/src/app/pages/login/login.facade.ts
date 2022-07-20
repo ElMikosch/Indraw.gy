@@ -6,10 +6,6 @@ import { IndrawgyApi } from 'src/app/services/indrawgy.api';
 export class LoginFacade {
   constructor(private api: IndrawgyApi) {}
 
-  public async playerAlreadyInGame() {
-    return await this.api.get<boolean>('playerAlreadyInGame');
-  }
-
   public async login(username: string) {
     return await this.api.post<LoginRequestDto, unknown>('login', { username });
   }
