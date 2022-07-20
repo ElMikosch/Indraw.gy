@@ -15,7 +15,7 @@ export class SessionService {
 
   createNewSessionLink(): void {
     var id = Guid.create();
-    var baseUrl = `http://192.168.178.81:4200/player/register`;
+    var baseUrl = `${window.location.host}/player/register`;
     var absUrl = `${baseUrl}/${id}`;
 
     console.log(absUrl);
