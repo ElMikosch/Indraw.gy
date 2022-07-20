@@ -1,0 +1,24 @@
+<h1 class="mt-8 mb-16 text-5xl flex justify-center">Indraw.gy</h1>
+<div class="m-8">
+  <button class="btn btn-primary w-full"
+          (click)="onSelectGameMode(GameMode.draw)">Malen</button>
+  <div class="divider">ODER</div>
+  <button class="btn btn-primary w-full"
+          (click)="onSelectGameMode(GameMode.drawBr)">Malen - Battle Royale</button>
+  <div class="divider">ODER</div>
+  <button class="btn btn-primary w-full"
+          (click)="onSelectGameMode(GameMode.guess)">Raten</button>
+  <div class="divider">ANZAHL DER RUNDEN</div>
+  <input type="range"
+         min="5"
+         max="20"
+         class="range range-primary range-lg"
+         step="5"
+         [(ngModel)]="rounds" />
+  <div class="w-full flex justify-between text-xs px-2">
+    <span>5</span>
+    <span>10</span>
+    <span>15</span>
+    <span>20</span>
+  </div>
+</div>

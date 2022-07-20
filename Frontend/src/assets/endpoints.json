@@ -1,0 +1,4 @@
+{
+  "gameIsRunning": "/api/Game/gameIsRunning",
+  "startGame": "/api/Game/startGame"
+}
