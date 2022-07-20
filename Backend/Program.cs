@@ -28,7 +28,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-app.UseStaticFiles();
+app.UseFileServer();
 
 app.MapControllers();
 app.MapHub<PlayerHub>("/player");

@@ -13,7 +13,7 @@ if (environment.production) {
 bootstrapApplication(AppComponent, {
   providers: [
     importProvidersFrom(
-      RouterModule.forRoot(routes, { enableTracing: true }),
+      RouterModule.forRoot(routes, { useHash: true }),
       HttpClientModule
     ),
   ],
