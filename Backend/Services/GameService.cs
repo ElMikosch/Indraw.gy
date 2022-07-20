@@ -11,19 +11,49 @@ public class GameService
         GameState = new GameState();
     }
 
-    public void StartGame(GameMode mode, int rounds)
+    public void CreateGame(GameMode mode, int rounds, string sessionId)
     {
-        if (GameState.IsRunning) throw new Exception("Game is already running!");
+        if (GameState.GameStatus == GameStatus.Started) throw new Exception("Game is already running!");
         GameState = new GameState
         {
             Rounds = rounds,
             GameMode = mode,
-            IsRunning = true
+            GameStatus = GameStatus.Created,
+            MainSessionId = sessionId
         };
     }
 
-    public bool GameIsRunning()
+    public void StartGame(string sessionId)
     {
-        return GameState.IsRunning;
+        if (GameState.GameStatus == GameStatus.Started) throw new Exception("Game is already running!");
+        if (GameState.MainSessionId != sessionId) throw new Exception("Only the main screen can start the game");
+        GameState.GameStatus = GameStatus.Started;
+    }
+
+    public void ResetGame(string sessionId)
+    {
+        if (GameState.GameStatus == GameStatus.Started) throw new Exception("Game is already running!");
+        if (GameState.MainSessionId != sessionId) throw new Exception("Only the main screen can reset the game");
+        GameState = new GameState();
+    }
+
+    public GameStatus GetGameStatus()
+    {
+        return GameState.GameStatus;
+    }
+
+    public bool GameHasStarted()
+    {
+        return GameState.GameStatus == GameStatus.Started;
+    }
+
+    public bool GameIsCreated()
+    {
+        return GameState.GameStatus == GameStatus.Created;
+    }
+
+    public bool IsMainClient(string sessionId)
+    {
+        return GameState.MainSessionId == sessionId;
     }
 }

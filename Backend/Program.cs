@@ -1,3 +1,4 @@
+using Backend.Hubs;
 using Backend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,7 +9,11 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddSignalR();
+
 builder.Services.AddSingleton<GameService>();
+builder.Services.AddSingleton<PlayerService>();
 
 var app = builder.Build();
 
@@ -19,10 +24,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseAuthorization();
-
-app.UseStaticFiles();
+app.UseFileServer();
 
 app.MapControllers();
+app.MapHub<PlayerHub>("/hubs/player");
 
 app.Run();

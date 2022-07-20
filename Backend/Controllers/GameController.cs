@@ -1,4 +1,6 @@
-﻿using Backend.Models.RequestDtos;
+﻿using Backend.Extensions;
+using Backend.Models;
+using Backend.Models.RequestDtos;
 using Backend.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,28 +9,45 @@ namespace Backend.Controllers;
 public class GameController : BaseController
 {
     private readonly GameService _gameService;
+    private readonly PlayerService _playerService;
 
-    public GameController(GameService gameService)
+    public GameController(GameService gameService, PlayerService playerService)
     {
         _gameService = gameService;
+        _playerService = playerService;
     }
 
-    [HttpPost("startGame")]
-    public IActionResult StartGame([FromBody] StartGameRequestDto startGameRequestDto)
+    [HttpPost("createGame")]
+    public IActionResult CreateGame([FromBody] StartGameRequestDto startGameRequestDto)
     {
-        _gameService.StartGame(startGameRequestDto.GameMode, startGameRequestDto.Rounds);
+        _gameService.CreateGame(startGameRequestDto.GameMode, startGameRequestDto.Rounds, Request.GetSessionId());
         return Ok();
     }
 
-    [HttpGet("gameIsRunning")]
-    public IActionResult GameIsRunning()
+    [HttpPost("startGame")]
+    public IActionResult StartGame()
     {
-        return Ok(_gameService.GameIsRunning());
+        _gameService.StartGame(Request.GetSessionId());
+        return Ok();
     }
 
-    [HttpPost("restartGame")]
-    public IActionResult RestartGame()
+    [HttpGet("gameStatus")]
+    public IActionResult GetGameStatus()
     {
+        return Ok(_gameService.GetGameStatus());
+    }
+
+    [HttpGet("isMainClient")]
+    public IActionResult IsMainClient()
+    {
+        return Ok(_gameService.IsMainClient(Request.GetSessionId()));
+    }
+
+    [HttpPost("resetGame")]
+    public IActionResult ResetGame()
+    {
+        _gameService.ResetGame(Request.GetSessionId());
+        _playerService.Reset();
         return Ok();
     }
 }

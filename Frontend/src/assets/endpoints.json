@@ -1,4 +1,9 @@
 {
-  "gameIsRunning": "/api/Game/gameIsRunning",
-  "startGame": "/api/Game/startGame"
+  "gameStatus": "/api/Game/gameStatus",
+  "startGame": "/api/Game/startGame",
+  "createGame": "/api/Game/createGame",
+  "login": "/api/login",
+  "playerAlreadyInGame": "/api/login/playerAlreadyInGame",
+  "isMainClient": "/api/game/isMainClient",
+  "resetGame": "/api/game/resetGame"
 }

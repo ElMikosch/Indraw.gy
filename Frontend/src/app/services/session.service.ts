@@ -13,13 +13,9 @@ export class SessionService {
     this.sessionLink$ = this.sessionLinkSubject.asObservable();
   }
 
-  createNewSessionLink(): void {
-    var id = Guid.create();
-    var baseUrl = `${window.location.host}/player/register`;
-    var absUrl = `${baseUrl}/${id}`;
-
-    console.log(absUrl);
-
-    this.sessionLinkSubject.next(absUrl);
+  createLoginLink(): void {
+    const url = `${window.location.origin}/login`;
+    console.log(url);
+    this.sessionLinkSubject.next(url);
   }
 }

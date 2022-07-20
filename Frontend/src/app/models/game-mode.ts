@@ -3,3 +3,4 @@ export enum GameMode {
   drawBr,
   guess,
 }
+
