@@ -99,5 +99,5 @@ jobs:
           key: ${{ secrets.SSHKEY }}
           port: ${{ secrets.PORT }}
           script: |
-          killall screen
-          screen dotnet Backend.dll
+            killall screen
+            screen dotnet Backend.dll
