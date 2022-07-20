@@ -1,0 +1,6 @@
+<ngx-qrcode 
+  [elementType]="elementType" 
+  [value]="(sessionService.sessionLink$ | async) ?? ''"
+  cssClass="aclass"
+  [errorCorrectionLevel]="errorCorrection">
+</ngx-qrcode>
