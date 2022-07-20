@@ -5,7 +5,7 @@ name: Indraw.gy Build 🖊
 
 on:
   push:
-    branches: ["main", "worflow-testing"]
+    branches: ["main"]
   pull_request:
     branches: ["main"]
 
@@ -66,7 +66,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v2
         with:
-          name: dist
+          name: indrawgy-backend
       - name: Publish
         uses: nogsantos/scp-deploy@master
         with:
@@ -76,3 +76,16 @@ jobs:
           port: ${{ secrets.PORT }}
           user: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSHKEY }}
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: dist
+      - name: Publish
+        uses: nogsantos/scp-deploy@master
+        with:
+          src: ./wwwroot/*
+          host: ${{ secrets.HOST }}
+          remote: ${{ secrets.DIR }}
+          port: ${{ secrets.PORT }}
+          user: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSHKEY }}      
