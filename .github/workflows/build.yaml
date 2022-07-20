@@ -62,7 +62,9 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSHKEY }}
           port: ${{ secrets.PORT }}
-          script: rm -r /var/www/indrawgy/*
+          script: |
+           rm -r /var/www/indrawgy/*
+           mkdir /var/www/indrawgy/wwwroot
       - name: Download artifact
         uses: actions/download-artifact@v2
         with:
@@ -89,3 +91,13 @@ jobs:
           port: ${{ secrets.PORT }}
           user: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSHKEY }}      
+      - name: Restart Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSHKEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+          killall screen
+          screen dotnet Backend.dll
