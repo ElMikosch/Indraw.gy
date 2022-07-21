@@ -5,3 +5,12 @@
   [errorCorrectionLevel]="errorCorrection">
 </ngx-qrcode>
 <button class="btn btn-error" (click)="resetGame()">Reset Game</button>
+
+<ng-container [ngSwitch]="gameMode">
+  <ng-container *ngSwitchCase="GameMode.guess">
+    loool
+  </ng-container>
+  <ng-container *ngSwitchCase="GameMode.draw || GameMode.drawBr">
+    BRBRBRB
+  </ng-container>
+</ng-container>

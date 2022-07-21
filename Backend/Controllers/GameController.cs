@@ -37,6 +37,12 @@ public class GameController : BaseController
         return Ok(_gameService.GetGameStatus());
     }
 
+    [HttpGet("gameMode")]
+    public IActionResult GetGameMode()
+    {
+        return Ok(_gameService.GetGameMode());
+    }
+
     [HttpGet("isMainClient")]
     public IActionResult IsMainClient()
     {

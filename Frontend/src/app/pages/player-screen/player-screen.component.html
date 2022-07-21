@@ -1,1 +1,15 @@
-<p>player-screen works!</p>
+<ng-container [ngSwitch]="gameMode">
+  <ng-container *ngSwitchCase="GameMode.guess">
+    <app-player-guess></app-player-guess>
+  </ng-container>
+  <ng-container *ngSwitchDefault>
+    DRAW COMPONENT
+  </ng-container>
+</ng-container>
+
+
+<ng-container *ngIf="gameStatus === GameStatus.created">
+  <div class="m-8">
+    <button class="btn btn-primary btn-lg w-full ">Ready</button>
+  </div>
+</ng-container>

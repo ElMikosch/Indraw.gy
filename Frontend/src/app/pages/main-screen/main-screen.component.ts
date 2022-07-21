@@ -7,6 +7,8 @@ import {
 } from '@techiediaries/ngx-qrcode';
 import { SessionService } from 'src/app/services/session.service';
 import { MainScreenFacade } from './main-screen.facade';
+import { GameStatus } from '../../models/game-status';
+import { GameMode } from '../../models/game-mode';
 
 @Component({
   selector: 'app-main-screen',
@@ -19,6 +21,8 @@ import { MainScreenFacade } from './main-screen.facade';
 export class MainScreenComponent implements OnInit {
   public elementType = 'url' as NgxQrcodeElementTypes;
   public errorCorrection = 'L' as NgxQrcodeErrorCorrectionLevels;
+  public gameMode!: GameMode;
+  GameMode = GameMode;
 
   constructor(
     public sessionService: SessionService,
@@ -27,6 +31,8 @@ export class MainScreenComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.sessionService.createLoginLink();
+    this.gameMode = await this.facade.getGameMode();
+    console.log(this.gameMode);
   }
 
   async resetGame() {

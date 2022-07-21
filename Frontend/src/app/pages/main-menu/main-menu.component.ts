@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { GameMode } from 'src/app/models/game-mode';
 import { MainMenuFacade } from './main-menu.facade';
 import { GameStatus } from '../../models/game-status';
+import {AiDrawingComponent} from "../../components/ai-drawing/ai-drawing.component";
 
 @Component({
   standalone: true,
@@ -11,7 +12,7 @@ import { GameStatus } from '../../models/game-status';
   templateUrl: './main-menu.component.html',
   styleUrls: ['./main-menu.component.scss'],
   providers: [MainMenuFacade],
-  imports: [FormsModule],
+  imports: [FormsModule, AiDrawingComponent],
 })
 export class MainMenuComponent implements OnInit {
   public rounds: number;

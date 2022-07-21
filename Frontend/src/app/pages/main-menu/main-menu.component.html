@@ -1,24 +1,25 @@
-<h1 class="mt-8 mb-16 text-5xl flex justify-center">Indraw.gy</h1>
+<h1 class="mt-8 mb-16 text-5xl xl:text-9xl 3xl:text-[12rem] flex justify-center">Indraw.gy</h1>
 <div class="m-8">
-  <button class="btn btn-primary w-full"
+  <button class="btn btn-primary btn-lg w-full xl:h-24 3xl:h-24 text-1xl xl:text-3xl 3xl:text-5xl"
           (click)="onSelectGameMode(GameMode.draw)">Malen</button>
-  <div class="divider">ODER</div>
-  <button class="btn btn-primary w-full"
+  <div class="divider my-8 xl:text-1xl 3xl:text-3xl">ODER</div>
+  <button class="btn btn-primary btn-lg w-full xl:h-24 3xl:h-24 text-1xl xl:text-3xl 3xl:text-5xl"
           (click)="onSelectGameMode(GameMode.drawBr)">Malen - Battle Royale</button>
-  <div class="divider">ODER</div>
-  <button class="btn btn-primary w-full"
+  <div class="divider my-8 xl:text-1xl 3xl:text-3xl">ODER</div>
+  <button class="btn btn-primary btn-lg w-full xl:h-24 3xl:h-24 text-1xl xl:text-3xl 3xl:text-5xl"
           (click)="onSelectGameMode(GameMode.guess)">Raten</button>
-  <div class="divider">ANZAHL DER RUNDEN</div>
+  <div class="divider my-8 xl:text-1xl 3xl:text-3xl">ANZAHL DER RUNDEN</div>
   <input type="range"
          min="5"
          max="20"
          class="range range-primary range-lg"
          step="5"
          [(ngModel)]="rounds" />
-  <div class="w-full flex justify-between text-xs px-2">
+  <div class="w-full flex justify-between text-xs xl:text-2xl 3xl:text-3xl px-2">
     <span>5</span>
     <span>10</span>
     <span>15</span>
     <span>20</span>
   </div>
 </div>
+

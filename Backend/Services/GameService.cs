@@ -42,6 +42,11 @@ public class GameService
         return GameState.GameStatus;
     }
 
+    public GameMode GetGameMode()
+    {
+        return GameState.GameMode;
+    }
+
     public bool GameHasStarted()
     {
         return GameState.GameStatus == GameStatus.Started;
