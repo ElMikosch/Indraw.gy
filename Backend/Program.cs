@@ -14,6 +14,7 @@ builder.Services.AddSignalR();
 
 builder.Services.AddSingleton<GameService>();
 builder.Services.AddSingleton<PlayerService>();
+builder.Services.AddSingleton<GameHub>();
 
 var app = builder.Build();
 
@@ -27,6 +28,6 @@ if (app.Environment.IsDevelopment())
 app.UseFileServer();
 
 app.MapControllers();
-app.MapHub<PlayerHub>("/hubs/player");
+app.MapHub<IndrawgyHub>("hubs/indrawgy");
 
 app.Run();

@@ -23,7 +23,16 @@ public class LoginController: BaseController
         if (_gameService.GameHasStarted()) return BadRequest("Game already started!");
         if(!_gameService.GameIsCreated()) return BadRequest("There is currently no active game");
         var sessionId = Request.GetSessionId();
-        _playerService.TryAddPlayer(sessionId, loginRequestDto.Username);
+        if (loginRequestDto.IsMainClient)
+        {
+
+        }
+        else
+        {
+
+            _playerService.TryAddPlayer(sessionId, loginRequestDto.Username);
+        }
+        
         return Ok();
     }
 
