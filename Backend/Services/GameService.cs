@@ -38,7 +38,7 @@ public class GameService
         Observable.Interval(TimeSpan.FromSeconds(1)).TakeWhile(x => x != maxTime + 1).Subscribe(async timer =>
         {
 
-            playerService.Players.ForEach(async x => await x.ClientProxy.SendAsync("TimerUpdate", maxTime - timer));
+            await playerService.MainClient.ClientProxy.SendAsync("TimerUpdate", maxTime - timer);
             if (timer == maxTime)
             {
                 EndGame(sessionId);
@@ -52,6 +52,7 @@ public class GameService
         if (GameState.GameStatus == GameStatus.Ended) throw new Exception("Game hasn't even started!");
         if (GameState.MainSessionId != sessionId) throw new Exception("Only the main screen can end the game");
         GameState.GameStatus = GameStatus.Ended;
+        playerService.All.ForEach(client => client.ClientProxy.SendAsync("gameEnded"));
     }
 
     public void ResetGame(string sessionId)

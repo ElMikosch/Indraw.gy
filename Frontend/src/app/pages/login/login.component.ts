@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoginFacade } from './login.facade';
-import { FormsModule } from '@angular/forms';
-import { IndrawgyApi } from '../../services/indrawgy.api';
-import { PlayerConnectionService } from '../../services/player-connection.service';
 
 @Component({
   selector: 'app-login',

@@ -25,7 +25,7 @@ public class LoginController: BaseController
         var sessionId = Request.GetSessionId();
         if (loginRequestDto.IsMainClient)
         {
-
+            _playerService.RegisterMainClient(sessionId);
         }
         else
         {
@@ -42,5 +42,4 @@ public class LoginController: BaseController
         var sessionId = Request.GetSessionId();
         return Ok(_playerService.PlayerAlreadyInGame(sessionId));
     }
-    
 }

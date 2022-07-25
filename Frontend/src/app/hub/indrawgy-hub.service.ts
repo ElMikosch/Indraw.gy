@@ -2,21 +2,23 @@ import { Injectable } from '@angular/core';
 import {
   HubConnection,
   HubConnectionBuilder,
-  HubConnectionState,
   LogLevel,
 } from '@microsoft/signalr';
-import { debounceTime, Observable, ReplaySubject } from 'rxjs';
+import { Observable, ReplaySubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class IndrawgyHubService {
-  hubConnection: HubConnection;
-  sessionId: string;
+  hubConnection!: HubConnection;
+  sessionId!: string;
 
   timerUpdate$ = new Observable<number>();
+  gameEnded$ = new Observable<unknown>();
 
-  constructor() {
+  constructor() {}
+
+  public connect(): void {
     this.hubConnection = new HubConnectionBuilder()
       .withUrl('/hubs/indrawgy')
       .withAutomaticReconnect()
@@ -50,9 +52,6 @@ export class IndrawgyHubService {
   }
 
   async registerMainClient(): Promise<void> {
-    if (this.hubConnection.state != HubConnectionState.Connected) {
-      debounceTime(2000);
-    }
     await this.hubConnection.invoke('RegisterMainClient', this.sessionId);
   }
 }

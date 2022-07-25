@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   NgxQrcodeElementTypes,
   NgxQrcodeErrorCorrectionLevels,
@@ -10,6 +11,7 @@ import { SessionService } from 'src/app/services/session.service';
 import { GameLayoutComponent } from './game-layout/game-layout.component';
 import { MainScreenFacade } from './main-screen.facade';
 
+@UntilDestroy()
 @Component({
   selector: 'app-main-screen',
   standalone: true,
@@ -21,6 +23,7 @@ import { MainScreenFacade } from './main-screen.facade';
 export class MainScreenComponent implements OnInit {
   public elementType = 'url' as NgxQrcodeElementTypes;
   public errorCorrection = 'L' as NgxQrcodeErrorCorrectionLevels;
+  public gameEnded = false;
 
   constructor(
     public sessionService: SessionService,
@@ -30,7 +33,13 @@ export class MainScreenComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.sessionService.createLoginLink();
-    void this.indrawgyHub.registerMainClient();
+    setTimeout(() => {
+      this.indrawgyHub.registerMainClient();
+    }, 1000);
+
+    this.indrawgyHub.gameEnded$
+      .pipe(untilDestroyed(this))
+      .subscribe(() => (this.gameEnded = true));
   }
 
   async resetGame() {

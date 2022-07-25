@@ -13,7 +13,7 @@ public class PlayerService
 
     public List<Player> Players { get => _players; set => _players = value; }
     public MainClient MainClient { get => _mainClient; set => _mainClient = value; }
-    public List<Client> Clients { get => _clients; set => _clients = value; }
+    public List<Client> All { get => new List<Client> { MainClient }.Concat(Players).ToList(); }
 
     public PlayerService(IHubContext<IndrawgyHub> hubContext)
     {
@@ -34,7 +34,6 @@ public class PlayerService
             Points = 0
         };
 
-        Clients.Add(newPlayer);
         Players.Add(newPlayer);
     }
 
@@ -60,14 +59,17 @@ public class PlayerService
 
     public void RegisterMainClient(string sessionId)
     {
-        if (MainClient != null) throw new Exception("There is arleady a main client! You cannot add anoter one!");
-
-        var mainClient = new MainClient
+        MainClient = new MainClient
         {
             SessionId = sessionId
         };
+    }
 
-        MainClient = mainClient;
-        Clients.Add(mainClient);
+
+    public void UpdateMainClientConnection(string sessionId, string connectionId, IClientProxy proxy)
+    {
+        MainClient.SessionId = sessionId;
+        MainClient.ConnectionId = connectionId;
+        MainClient.ClientProxy = proxy;
     }
 }

@@ -24,7 +24,7 @@ namespace Backend.Hubs
 
         public void RegisterMainClient(string sessionId)
         {
-            _playerService.UpdateConnection(sessionId, Context.ConnectionId, Clients.Caller);
+            _playerService.UpdateMainClientConnection(sessionId, Context.ConnectionId, Clients.Caller);
         }
     }
 }

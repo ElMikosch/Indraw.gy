@@ -5,9 +5,10 @@
   cssClass="aclass"
   [errorCorrectionLevel]="errorCorrection">
 </ngx-qrcode> -->
-<span class="countdown font-mono text-9xl justify-center">
+<span class="countdown font-mono text-9xl justify-center" *ngIf="!gameEnded">
   <span style="--value:{{this.indrawgyHub.timerUpdate$ | async}};"></span>
 </span>
+<span class="font-mono text-9xl justify-center" *ngIf="gameEnded">Game Ended!</span>
 <app-game-layout class="w-full h-[80vh]"></app-game-layout>
 <button class="btn btn-error self-end" (click)="resetGame()">Reset Game</button>
 <button class="btn btn-error self-end" (click)="startGame()">Start Game</button>
