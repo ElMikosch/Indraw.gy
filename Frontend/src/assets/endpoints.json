@@ -6,5 +6,6 @@
   "playerAlreadyInGame": "/api/login/playerAlreadyInGame",
   "isMainClient": "/api/game/isMainClient",
   "resetGame": "/api/game/resetGame",
-  "gameMode": "/api/game/gameMode"
+  "gameMode": "/api/game/gameMode",
+  "sendGuess": "/api/guess/sendGuess"
 }

@@ -25,9 +25,9 @@ public class GameController : BaseController
     }
 
     [HttpPost("startGame")]
-    public IActionResult StartGame()
+    public async Task<IActionResult> StartGame()
     {
-        _gameService.StartGame(Request.GetSessionId());
+        await _gameService.StartGame(Request.GetSessionId());
         return Ok();
     }
 

@@ -9,7 +9,6 @@ export class LoginFacade {
   public async login(username: string) {
     return await this.api.post<LoginRequestDto, unknown>('login', {
       username,
-      isMainClient: false,
     });
   }
 }

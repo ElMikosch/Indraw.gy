@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controllers;
 
-public class LoginController: BaseController
+public class LoginController : BaseController
 {
     private readonly GameService _gameService;
     private readonly PlayerService _playerService;
@@ -21,18 +21,9 @@ public class LoginController: BaseController
     public IActionResult Login([FromBody] LoginRequestDto loginRequestDto)
     {
         if (_gameService.GameHasStarted()) return BadRequest("Game already started!");
-        if(!_gameService.GameIsCreated()) return BadRequest("There is currently no active game");
+        if (!_gameService.GameIsCreated()) return BadRequest("There is currently no active game");
         var sessionId = Request.GetSessionId();
-        if (loginRequestDto.IsMainClient)
-        {
-            _playerService.RegisterMainClient(sessionId);
-        }
-        else
-        {
-
-            _playerService.TryAddPlayer(sessionId, loginRequestDto.Username);
-        }
-        
+        _playerService.TryAddPlayer(sessionId, loginRequestDto.Username);
         return Ok();
     }
 

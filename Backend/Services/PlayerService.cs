@@ -6,19 +6,19 @@ namespace Backend.Services;
 
 public class PlayerService
 {
-    private List<Player> _players;
-    private MainClient _mainClient;
-    private List<Client> _clients;
-    private readonly IHubContext<IndrawgyHub> hubContext;
+    private readonly IHubContext<IndrawgyHub> _hubContext;
 
-    public List<Player> Players { get => _players; set => _players = value; }
-    public MainClient MainClient { get => _mainClient; set => _mainClient = value; }
-    public List<Client> All { get => new List<Client> { MainClient }.Concat(Players).ToList(); }
+    private List<Player> Players { get; set; }
+
+    public MainClient MainClient { get; set; }
+
+    public IClientProxy All => _hubContext.Clients.All;
 
     public PlayerService(IHubContext<IndrawgyHub> hubContext)
     {
         Players = new List<Player>();
-        this.hubContext = hubContext;
+        MainClient = new MainClient();
+        _hubContext = hubContext;
     }
 
     public void TryAddPlayer(string sessionId, string username)
@@ -40,10 +40,16 @@ public class PlayerService
     public void UpdateConnection(string sessionId, string connectionId, IClientProxy proxy)
     {
         var player = Players.FirstOrDefault(x => x.SessionId == sessionId);
-        if (player == null) return;
-        player.ConnectionId = connectionId;
-        player.ClientProxy = proxy;
-
+        if (player != null)
+        {
+            player.ConnectionId = connectionId;
+            player.ClientProxy = proxy;
+        }
+        else if (MainClient.SessionId == sessionId)
+        {
+            MainClient.ClientProxy = proxy;
+            MainClient.ConnectionId = connectionId;
+        }
     }
 
     public bool PlayerAlreadyInGame(string sessionId)
@@ -57,19 +63,8 @@ public class PlayerService
         Players = new List<Player>();
     }
 
-    public void RegisterMainClient(string sessionId)
+    public Player GetPlayerBySessionId(string sessionId)
     {
-        MainClient = new MainClient
-        {
-            SessionId = sessionId
-        };
-    }
-
-
-    public void UpdateMainClientConnection(string sessionId, string connectionId, IClientProxy proxy)
-    {
-        MainClient.SessionId = sessionId;
-        MainClient.ConnectionId = connectionId;
-        MainClient.ClientProxy = proxy;
+        return Players.FirstOrDefault(x => x.SessionId == sessionId) ?? throw new InvalidOperationException();
     }
 }

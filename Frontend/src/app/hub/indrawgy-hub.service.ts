@@ -5,6 +5,8 @@ import {
   LogLevel,
 } from '@microsoft/signalr';
 import { Observable, ReplaySubject } from 'rxjs';
+import { DoodleNetEntry } from '../models/doodle-net-entry';
+import { Guess } from '../models/guess';
 
 @Injectable({
   providedIn: 'root',
@@ -15,10 +17,10 @@ export class IndrawgyHubService {
 
   timerUpdate$ = new Observable<number>();
   gameEnded$ = new Observable<unknown>();
+  wordToGuess$ = new Observable<DoodleNetEntry>();
+  updateGuessList$ = new Observable<Guess[]>();
 
-  constructor() {}
-
-  public connect(): void {
+  constructor() {
     this.hubConnection = new HubConnectionBuilder()
       .withUrl('/hubs/indrawgy')
       .withAutomaticReconnect()
@@ -39,19 +41,25 @@ export class IndrawgyHubService {
       this[<keyof IndrawgyHubService>n] = subject.asObservable() as any;
     });
 
-    this.hubConnection.start().then(
-      () => console.log('connected'),
-      () => console.log('something went wrong while connecting with hub')
-    );
+    this.hubConnection.start().then(this.onConnected.bind(this));
+    this.hubConnection.onreconnected(this.onReconnected.bind(this));
 
     this.sessionId = sessionStorage.getItem('sessionId') || '';
   }
 
-  async registerPlayer(): Promise<void> {
-    await this.hubConnection.invoke('RegisterPlayer', this.sessionId);
+  async register(): Promise<void> {
+    await this.hubConnection.invoke('Register', this.sessionId);
   }
 
-  async registerMainClient(): Promise<void> {
-    await this.hubConnection.invoke('RegisterMainClient', this.sessionId);
+  async startRound(): Promise<void> {
+    await this.hubConnection.invoke('ModelReady', this.sessionId);
+  }
+
+  private async onConnected() {
+    await this.register();
+  }
+
+  private async onReconnected(connectionId: string | undefined) {
+    await this.register();
   }
 }

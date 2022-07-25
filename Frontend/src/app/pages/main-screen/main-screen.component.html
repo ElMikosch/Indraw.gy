@@ -5,24 +5,23 @@
   cssClass="aclass"
   [errorCorrectionLevel]="errorCorrection">
 </ngx-qrcode>
-<button class="btn btn-error" (click)="resetGame()">Reset Game</button>
+<button class="btn btn-error" (click)="resetGame()">Reset Game</button> -->
 
-<ng-container [ngSwitch]="gameMode">
-  <ng-container *ngSwitchCase="GameMode.guess">
-    loool
-  </ng-container>
-  <ng-container *ngSwitchCase="GameMode.draw || GameMode.drawBr">
-    BRBRBRB
-  </ng-container>
-</ng-container>
-</ngx-qrcode> -->
+
   <span class="countdown font-mono text-9xl justify-center"
         *ngIf="!gameEnded">
     <span style="--value:{{this.indrawgyHub.timerUpdate$ | async}};"></span>
   </span>
   <span class="font-mono text-9xl justify-center"
         *ngIf="gameEnded">Game Ended!</span>
-  <app-game-layout class="w-full h-[80vh]"></app-game-layout>
+  <ng-container [ngSwitch]="gameMode">
+    <ng-container *ngSwitchCase="GameMode.guess">
+      <app-main-screen-guess></app-main-screen-guess>
+    </ng-container>
+    <ng-container *ngSwitchDefault>
+      <app-game-layout class="w-full h-[80vh]"></app-game-layout>
+    </ng-container>
+  </ng-container>
   <button class="btn btn-error self-end"
           (click)="resetGame()">Reset Game</button>
   <button class="btn btn-error self-end"
