@@ -2,9 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { GameMode } from 'src/app/models/game-mode';
+import { AiDrawingComponent } from '../../components/ai-drawing/ai-drawing.component';
 import { MainMenuFacade } from './main-menu.facade';
-import { GameStatus } from '../../models/game-status';
-import {AiDrawingComponent} from "../../components/ai-drawing/ai-drawing.component";
 
 @Component({
   standalone: true,
@@ -26,6 +25,7 @@ export class MainMenuComponent implements OnInit {
 
   async onSelectGameMode(gameMode: GameMode) {
     await this.facade.createGame(gameMode, this.rounds);
+    await this.facade.registerMainClient();
     await this.router.navigate(['game']);
   }
 }

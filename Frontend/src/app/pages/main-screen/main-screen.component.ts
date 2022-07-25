@@ -1,19 +1,22 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   NgxQrcodeElementTypes,
   NgxQrcodeErrorCorrectionLevels,
   NgxQRCodeModule,
 } from '@techiediaries/ngx-qrcode';
+import { IndrawgyHubService } from 'src/app/hub/indrawgy-hub.service';
 import { SessionService } from 'src/app/services/session.service';
-import { MainScreenFacade } from './main-screen.facade';
-import { GameStatus } from '../../models/game-status';
 import { GameMode } from '../../models/game-mode';
+import { GameLayoutComponent } from './game-layout/game-layout.component';
+import { MainScreenFacade } from './main-screen.facade';
 
+@UntilDestroy()
 @Component({
   selector: 'app-main-screen',
   standalone: true,
-  imports: [CommonModule, NgxQRCodeModule],
+  imports: [CommonModule, NgxQRCodeModule, GameLayoutComponent],
   providers: [MainScreenFacade],
   templateUrl: './main-screen.component.html',
   styleUrls: ['./main-screen.component.scss'],
@@ -23,20 +26,33 @@ export class MainScreenComponent implements OnInit {
   public errorCorrection = 'L' as NgxQrcodeErrorCorrectionLevels;
   public gameMode!: GameMode;
   GameMode = GameMode;
+  public gameEnded = false;
 
   constructor(
     public sessionService: SessionService,
-    private facade: MainScreenFacade
+    private facade: MainScreenFacade,
+    public indrawgyHub: IndrawgyHubService
   ) {}
 
   async ngOnInit(): Promise<void> {
     this.sessionService.createLoginLink();
     this.gameMode = await this.facade.getGameMode();
     console.log(this.gameMode);
+    setTimeout(() => {
+      this.indrawgyHub.registerMainClient();
+    }, 1000);
+
+    this.indrawgyHub.gameEnded$
+      .pipe(untilDestroyed(this))
+      .subscribe(() => (this.gameEnded = true));
   }
 
   async resetGame() {
     await this.facade.resetGame();
     location.reload();
+  }
+
+  async startGame() {
+    await this.facade.startGame();
   }
 }

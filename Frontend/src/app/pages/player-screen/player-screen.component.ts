@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PlayerScreenFacade } from './player-screen.facade';
-import { PlayerConnectionService } from '../../services/player-connection.service';
-import { PlayerGuessComponent } from '../../components/player-guess/player-guess.component';
+import { Component, OnInit } from '@angular/core';
+import { IndrawgyHubService } from 'src/app/hub/indrawgy-hub.service';
 import { GameMode } from 'src/app/models/game-mode';
+import { PlayerGuessComponent } from '../../components/player-guess/player-guess.component';
 import { GameStatus } from '../../models/game-status';
+import { PlayerScreenFacade } from './player-screen.facade';
 
 @Component({
   selector: 'app-player-screen',
@@ -16,7 +16,7 @@ import { GameStatus } from '../../models/game-status';
 })
 export class PlayerScreenComponent implements OnInit {
   constructor(
-    private player: PlayerConnectionService,
+    private hub: IndrawgyHubService,
     private facade: PlayerScreenFacade
   ) {}
   public gameMode!: GameMode;
