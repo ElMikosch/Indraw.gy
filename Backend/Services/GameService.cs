@@ -2,6 +2,7 @@
 using Backend.Models;
 using Microsoft.AspNetCore.SignalR;
 using System.Reactive.Linq;
+using System.Security.Cryptography.Xml;
 using Backend.Extensions;
 
 namespace Backend.Services;
@@ -12,6 +13,7 @@ public class GameService
     private readonly IConfiguration _configuration;
 
     private GameState GameState { get; set; }
+    private IDisposable Timer { get; set; }
 
     public GameService(PlayerService playerService, IConfiguration configuration)
     {
@@ -80,6 +82,11 @@ public class GameService
             IsCorrect = guessCorrect
         });
 
+        if (GameState.FinishedPlayers.Count == _playerService.Players.Count)
+        {
+            await RoundEnd();
+        }
+
         await _playerService.MainClient.ClientProxy.SendAsync("UpdateGuessList", GameState.Guesses);
         return guessCorrect;
     }
@@ -137,17 +144,26 @@ public class GameService
         if (GameState.GameStatus == GameStatus.Ended) throw new Exception("Game hasn't even started!");
         if (!IsMainClient(sessionId)) throw new Exception("Only the main screen can start the next round");
         if (GameState.CurrentRound >= GameState.Rounds) ResetGame(sessionId);
-        var maxTime = 30;
+        const int maxTime = 30;
         GameState.FinishedPlayers = new List<string>();
         GameState.Guesses = new List<Guess>();
         await _playerService.MainClient.ClientProxy.SendAsync("UpdateGuessList", GameState.Guesses);
-
-        Observable.Interval(TimeSpan.FromSeconds(1)).TakeWhile(x => x != maxTime + 1).Subscribe(async timer =>
+        await _playerService.All.SendAsync("RoundStart");
+        
+        
+        Timer = Observable.Interval(TimeSpan.FromSeconds(1)).TakeWhile(x => x != maxTime + 1).Subscribe(async timer =>
         {
             await _playerService.MainClient.ClientProxy.SendAsync("TimerUpdate", maxTime - timer);
             if (timer != maxTime) return;
-            GameState.CurrentRound++;
-            await SendWordToGuess();
+            await RoundEnd();
         });
+    }
+
+    private async Task RoundEnd()
+    {
+        if(Timer != null) Timer.Dispose();
+        await _playerService.All.SendAsync("RoundEnd");
+        GameState.CurrentRound++;
+        await SendWordToGuess();
     }
 }

@@ -17,6 +17,8 @@ export class IndrawgyHubService {
 
   timerUpdate$ = new Observable<number>();
   gameEnded$ = new Observable<unknown>();
+  roundEnd$ = new Observable<unknown>();
+  roundStart$ = new Observable<unknown>();
   wordToGuess$ = new Observable<DoodleNetEntry>();
   updateGuessList$ = new Observable<Guess[]>();
 
@@ -52,7 +54,7 @@ export class IndrawgyHubService {
   }
 
   async startRound(): Promise<void> {
-    await this.hubConnection.invoke('ModelReady', this.sessionId);
+    await this.hubConnection.invoke('StartRound', this.sessionId);
   }
 
   private async onConnected() {

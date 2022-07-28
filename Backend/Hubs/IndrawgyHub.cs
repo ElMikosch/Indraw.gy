@@ -19,7 +19,7 @@ namespace Backend.Hubs
             _playerService.UpdateConnection(sessionId, Context.ConnectionId, Clients.Caller);
         }
 
-        public async Task ModelReady(string sessionId)
+        public async Task StartRound(string sessionId)
         {
             await _gameService.StartNextRound(sessionId);
         }

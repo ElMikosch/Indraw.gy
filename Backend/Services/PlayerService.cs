@@ -8,7 +8,7 @@ public class PlayerService
 {
     private readonly IHubContext<IndrawgyHub> _hubContext;
 
-    private List<Player> Players { get; set; }
+    public List<Player> Players { get; set; }
 
     public MainClient MainClient { get; set; }
 

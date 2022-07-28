@@ -19,22 +19,34 @@ import { PlayerGuessFacade } from './player-guess.facade';
 @UntilDestroy()
 export class PlayerGuessComponent {
   public guess: string;
-  public guesses: string[];
+  public guessList: string[];
   public guessCorrect: boolean;
   public wordToGuess$: Observable<DoodleNetEntry>;
+  public isRoundRunning: boolean;
 
   constructor(
     private facacde: PlayerGuessFacade,
     private hub: IndrawgyHubService
   ) {
     this.guess = '';
-    this.guesses = [];
+    this.guessList = [];
     this.guessCorrect = false;
     this.wordToGuess$ = this.hub.wordToGuess$;
+    this.isRoundRunning = false;
+
+    this.hub.roundStart$.pipe(untilDestroyed(this)).subscribe((_) => {
+      this.isRoundRunning = true;
+      this.guessCorrect = false;
+      this.guessList = [];
+    });
+
+    this.hub.roundEnd$
+      .pipe(untilDestroyed(this))
+      .subscribe((_) => (this.isRoundRunning = false));
 
     this.hub.wordToGuess$.pipe(untilDestroyed(this)).subscribe((x) => {
       this.guessCorrect = false;
-      this.guesses = [];
+      this.guessList = [];
     });
   }
 
@@ -44,7 +56,7 @@ export class PlayerGuessComponent {
 
   async sendGuess() {
     this.guessCorrect = await this.facacde.sendGuess(this.guess);
-    this.guesses.push(this.guess);
+    this.guessList.push(this.guess);
     this.guess = '';
   }
 }
