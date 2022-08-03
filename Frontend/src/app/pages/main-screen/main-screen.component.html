@@ -1,7 +1,16 @@
-<ngx-qrcode
-  [elementType]="elementType"
-  [value]="(sessionService.sessionLink$ | async) ?? ''"
-  cssClass="aclass"
-  [errorCorrectionLevel]="errorCorrection">
-</ngx-qrcode>
-<button class="btn btn-error" (click)="resetGame()">Reset Game</button>
+<div class="flex-col flex w-full align-center p-8">
+  <ngx-qrcode
+    [elementType]="elementType"
+    [value]="(sessionService.sessionLink$ | async) ?? ''"
+    class="self-center"
+    [errorCorrectionLevel]="errorCorrection">
+  </ngx-qrcode>
+  <div *ngIf="gameBegins || gameStarted || gameEnded">
+    <span class="countdown font-mono text-9xl justify-center" *ngIf="!gameEnded">
+      <span style="--value:{{this.indrawgyHub.timerUpdate$ | async}};"></span>
+    </span>
+    <span class="font-mono text-9xl justify-center" *ngIf="gameEnded">Game Ended!</span>
+  </div>
+  <app-game-layout class="w-full h-[79vh]"></app-game-layout>
+</div>
+

@@ -15,7 +15,9 @@ builder.Services.AddSignalR();
 builder.Services.AddSingleton<GameService>();
 builder.Services.AddSingleton<PlayerService>();
 
+
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -27,6 +29,6 @@ if (app.Environment.IsDevelopment())
 app.UseFileServer();
 
 app.MapControllers();
-app.MapHub<PlayerHub>("/hubs/player");
+app.MapHub<IndrawgyHub>("hubs/indrawgy");
 
 app.Run();
