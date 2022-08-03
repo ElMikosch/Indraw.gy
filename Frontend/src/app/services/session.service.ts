@@ -13,7 +13,7 @@ export class SessionService {
   }
 
   createLoginLink(): void {
-    const url = `http://192.168.178.81:4200/#/login`;
+    const url = `${window.location.origin}/#/login`;
     console.log(url);
     this.sessionLinkSubject.next(url);
   }
