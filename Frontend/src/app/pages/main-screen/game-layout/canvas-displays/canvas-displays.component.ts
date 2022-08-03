@@ -16,7 +16,7 @@ import {
   styleUrls: ['./canvas-displays.component.scss'],
 })
 export class CanvasDisplaysComponent implements OnInit, AfterViewInit {
-  @Input() public timer = 0;
+  @Input() username!: string;
 
   @ViewChild('playerCanvas') playerCanvas!: ElementRef<HTMLCanvasElement>;
 

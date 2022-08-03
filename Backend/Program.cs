@@ -15,7 +15,9 @@ builder.Services.AddSignalR();
 builder.Services.AddSingleton<GameService>();
 builder.Services.AddSingleton<PlayerService>();
 
+
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

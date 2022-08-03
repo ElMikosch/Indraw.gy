@@ -24,6 +24,8 @@ export class MainScreenComponent implements OnInit {
   public elementType = 'url' as NgxQrcodeElementTypes;
   public errorCorrection = 'L' as NgxQrcodeErrorCorrectionLevels;
   public gameEnded = false;
+  public gameBegins = false;
+  public gameStarted = false;
 
   constructor(
     public sessionService: SessionService,

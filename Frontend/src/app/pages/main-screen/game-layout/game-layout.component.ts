@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { IndrawgyHubService } from 'src/app/hub/indrawgy-hub.service';
 import { CanvasDisplaysComponent } from './canvas-displays/canvas-displays.component';
 
 @Component({
@@ -10,7 +11,7 @@ import { CanvasDisplaysComponent } from './canvas-displays/canvas-displays.compo
   styleUrls: ['./game-layout.component.scss'],
 })
 export class GameLayoutComponent implements OnInit {
-  constructor() {}
+  constructor(public indrawgyHub: IndrawgyHubService) {}
 
   ngOnInit(): void {}
 }

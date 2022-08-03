@@ -35,6 +35,7 @@ public class PlayerService
         };
 
         Players.Add(newPlayer);
+        MainClient.ClientProxy.SendAsync("PlayerUpdate", Players);
     }
 
     public void UpdateConnection(string sessionId, string connectionId, IClientProxy proxy)
@@ -71,5 +72,6 @@ public class PlayerService
         MainClient.SessionId = sessionId;
         MainClient.ConnectionId = connectionId;
         MainClient.ClientProxy = proxy;
+        MainClient.ClientProxy.SendAsync("PlayerUpdate", Players);
     }
 }

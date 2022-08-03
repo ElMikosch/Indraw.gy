@@ -5,6 +5,7 @@ import {
   LogLevel,
 } from '@microsoft/signalr';
 import { Observable, ReplaySubject } from 'rxjs';
+import { Player } from '../models/player';
 
 @Injectable({
   providedIn: 'root',
@@ -15,6 +16,7 @@ export class IndrawgyHubService {
 
   timerUpdate$ = new Observable<number>();
   gameEnded$ = new Observable<unknown>();
+  playerUpdate$ = new Observable<Player[]>();
 
   constructor() {}
 

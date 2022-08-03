@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Guid } from 'guid-typescript';
 import { Observable, ReplaySubject } from 'rxjs';
 
 @Injectable({
@@ -14,7 +13,7 @@ export class SessionService {
   }
 
   createLoginLink(): void {
-    const url = `${window.location.origin}/login`;
+    const url = `http://192.168.178.81:4200/#/login`;
     console.log(url);
     this.sessionLinkSubject.next(url);
   }
