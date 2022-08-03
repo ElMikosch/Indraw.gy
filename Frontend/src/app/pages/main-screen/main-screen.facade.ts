@@ -12,8 +12,4 @@ export class MainScreenFacade {
   public async startGame() {
     await this.api.post('startGame', {});
   }
-
-  public async endGame() {
-    await this.api.post('startGame', {});
-  }
 }
