@@ -10,6 +10,8 @@ import { MainScreenGuessComponent } from 'src/app/components/main-screen-guess/m
 import { IndrawgyHubService } from 'src/app/hub/indrawgy-hub.service';
 import { SessionService } from 'src/app/services/session.service';
 import { GameMode } from '../../models/game-mode';
+import { IndrawgyHubService } from 'src/app/hub/indrawgy-hub.service';
+import { SessionService } from 'src/app/services/session.service';
 import { GameLayoutComponent } from './game-layout/game-layout.component';
 import { MainScreenFacade } from './main-screen.facade';
 
@@ -33,6 +35,8 @@ export class MainScreenComponent implements OnInit {
   public gameMode!: GameMode;
   GameMode = GameMode;
   public gameEnded = false;
+  public gameBegins = false;
+  public gameStarted = false;
 
   constructor(
     public sessionService: SessionService,

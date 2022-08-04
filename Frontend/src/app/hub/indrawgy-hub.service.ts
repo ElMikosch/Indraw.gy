@@ -7,6 +7,7 @@ import {
 import { Observable, ReplaySubject } from 'rxjs';
 import { DoodleNetEntry } from '../models/doodle-net-entry';
 import { Guess } from '../models/guess';
+import { Player } from '../models/player';
 
 @Injectable({
   providedIn: 'root',
@@ -21,6 +22,7 @@ export class IndrawgyHubService {
   roundStart$ = new Observable<unknown>();
   wordToGuess$ = new Observable<DoodleNetEntry>();
   updateGuessList$ = new Observable<Guess[]>();
+  playerUpdate$ = new Observable<Player[]>();
 
   constructor() {
     this.hubConnection = new HubConnectionBuilder()

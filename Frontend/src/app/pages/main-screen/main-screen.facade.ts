@@ -10,14 +10,7 @@ export class MainScreenFacade {
     await this.api.post('resetGame', {});
   }
 
-  public async getGameMode(): Promise<GameMode> {
-    return await this.api.get<GameMode>('gameMode');
-  }
   public async startGame() {
-    await this.api.post('startGame', {});
-  }
-
-  public async endGame() {
     await this.api.post('startGame', {});
   }
 }
