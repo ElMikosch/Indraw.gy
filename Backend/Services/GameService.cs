@@ -1,16 +1,22 @@
-﻿using Backend.Models;
+﻿using Backend.Hubs;
+using Backend.Models;
+using Microsoft.AspNetCore.SignalR;
+using System.Reactive.Linq;
 
 namespace Backend.Services;
 
 public class GameService
 {
+    private readonly PlayerService playerService;
+
     private GameState GameState { get; set; }
     private bool StartSequenceStopped;
     private bool StartSequenceStarted;
 
-    public GameService()
+    public GameService(PlayerService playerService)
     {
-        GameState = new GameState();
+        this.GameState = new GameState();
+        this.playerService = playerService;
     }
 
     public void CreateGame(GameMode mode, int rounds, string sessionId)

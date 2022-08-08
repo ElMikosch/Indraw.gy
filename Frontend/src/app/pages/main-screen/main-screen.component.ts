@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   NgxQrcodeElementTypes,
   NgxQrcodeErrorCorrectionLevels,
@@ -8,12 +9,14 @@ import {
 import { IndrawgyHubService } from 'src/app/hub/indrawgy-hub.service';
 import { GameStatus } from 'src/app/models/game-status';
 import { SessionService } from 'src/app/services/session.service';
+import { GameLayoutComponent } from './game-layout/game-layout.component';
 import { MainScreenFacade } from './main-screen.facade';
 
+@UntilDestroy()
 @Component({
   selector: 'app-main-screen',
   standalone: true,
-  imports: [CommonModule, NgxQRCodeModule],
+  imports: [CommonModule, NgxQRCodeModule, GameLayoutComponent],
   providers: [MainScreenFacade],
   templateUrl: './main-screen.component.html',
   styleUrls: ['./main-screen.component.scss'],
@@ -29,7 +32,8 @@ export class MainScreenComponent implements OnInit {
 
   constructor(
     public sessionService: SessionService,
-    private facade: MainScreenFacade
+    private facade: MainScreenFacade,
+    public indrawgyHub: IndrawgyHubService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -56,5 +60,9 @@ export class MainScreenComponent implements OnInit {
   async resetGame() {
     await this.facade.resetGame();
     location.reload();
+  }
+
+  async startGame() {
+    await this.facade.startGame();
   }
 }

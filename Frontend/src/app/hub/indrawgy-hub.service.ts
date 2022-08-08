@@ -11,9 +11,9 @@ import { Player } from '../models/player';
 @Injectable({
   providedIn: 'root',
 })
-export class PlayerConnectionService {
-  hubConnection: HubConnection;
-  sessionId: string;
+export class IndrawgyHubService {
+  hubConnection!: HubConnection;
+  sessionId!: string;
 
   timerUpdate$ = new Observable<number>();
   gameEnded$ = new Observable<unknown>();
@@ -26,7 +26,7 @@ export class PlayerConnectionService {
 
   public connect(): void {
     this.hubConnection = new HubConnectionBuilder()
-      .withUrl('/hubs/player')
+      .withUrl('/hubs/indrawgy')
       .withAutomaticReconnect()
       .configureLogging(LogLevel.Information)
       .build();
@@ -42,28 +42,23 @@ export class PlayerConnectionService {
         console.debug(`[signalr][${methodName}] ${JSON.stringify(v)}`);
         subject.next(v);
       });
-      this[<keyof PlayerConnectionService>n] = subject.asObservable() as any;
+      this[<keyof IndrawgyHubService>n] = subject.asObservable() as any;
     });
 
-    this.hubConnection.start().then(this.onConnected.bind(this));
-    this.hubConnection.onreconnected(this.onReconnected.bind(this));
+    this.hubConnection.start().then(
+      () => console.log('connected'),
+      () => console.log('something went wrong while connecting with hub')
+    );
 
     this.sessionId = sessionStorage.getItem('sessionId') || '';
   }
 
-  private async onConnected() {
-    console.log('connected');
-    await this.register();
-  }
-
-  private async onReconnected(connectionId: string | undefined) {
-    console.log('reconnected');
-    await this.register();
-  }
-
-  private async register() {
+  async registerPlayer(): Promise<void> {
     await this.hubConnection.invoke('RegisterPlayer', this.sessionId);
-    console.log('registered');
+  }
+
+  async registerMainClient(): Promise<void> {
+    await this.hubConnection.invoke('RegisterMainClient', this.sessionId);
   }
 
   async beginGameStartSequence(): Promise<void> {

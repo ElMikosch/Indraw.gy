@@ -8,7 +8,7 @@ namespace Backend.Hubs
         private readonly PlayerService _playerService;
         private readonly GameService gameService;
 
-        public IndrawgyHub(PlayerService playerService, GameService gameService)
+        public IndrawgyHub(PlayerService playerService)
         {
             _playerService = playerService;
             this.gameService = gameService;
