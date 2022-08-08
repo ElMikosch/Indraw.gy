@@ -6,6 +6,7 @@ import {
 } from '@microsoft/signalr';
 import { Observable, ReplaySubject } from 'rxjs';
 import { DoodleNetEntry } from '../models/doodle-net-entry';
+import { GameStatus } from '../models/game-status';
 import { Guess } from '../models/guess';
 import { Player } from '../models/player';
 
@@ -23,6 +24,9 @@ export class IndrawgyHubService {
   wordToGuess$ = new Observable<DoodleNetEntry>();
   updateGuessList$ = new Observable<Guess[]>();
   playerUpdate$ = new Observable<Player[]>();
+  allPlayerReady$ = new Observable<boolean>();
+  startSequenceTimer$ = new Observable<number>();
+  currentGameStatus$ = new Observable<GameStatus>();
 
   constructor() {
     this.hubConnection = new HubConnectionBuilder()
@@ -65,5 +69,13 @@ export class IndrawgyHubService {
 
   private async onReconnected(connectionId: string | undefined) {
     await this.register();
+  }
+
+  async beginGameStartSequence(): Promise<void> {
+    await this.hubConnection.invoke('beginGameStartSequence');
+  }
+
+  async stopGameStartSequence(): Promise<void> {
+    await this.hubConnection.invoke('');
   }
 }

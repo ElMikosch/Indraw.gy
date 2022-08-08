@@ -23,5 +23,10 @@ namespace Backend.Hubs
         {
             await _gameService.StartNextRound(sessionId);
         }
+
+        public void BeginGameStartSequence(string sessionId)
+        {
+            _gameService.BeginGameStartSequence(sessionId);
+        }
     }
 }

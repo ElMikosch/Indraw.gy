@@ -16,7 +16,7 @@ import { PlayerScreenFacade } from './player-screen.facade';
 })
 export class PlayerScreenComponent implements OnInit {
   constructor(
-    private hub: IndrawgyHubService,
+    public hub: IndrawgyHubService,
     private facade: PlayerScreenFacade
   ) {}
   public gameMode!: GameMode;
@@ -24,9 +24,15 @@ export class PlayerScreenComponent implements OnInit {
 
   public gameStatus!: GameStatus;
   GameStatus = GameStatus;
+  playerReady = false;
 
   async ngOnInit(): Promise<void> {
     this.gameMode = await this.facade.getGameMode();
     this.gameStatus = await this.facade.getGameStatus();
+  }
+
+  changePlayerReadyState(): void {
+    this.playerReady = !this.playerReady;
+    this.facade.changePlayerReadyState(this.playerReady);
   }
 }

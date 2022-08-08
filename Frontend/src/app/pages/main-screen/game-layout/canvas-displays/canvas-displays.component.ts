@@ -17,6 +17,7 @@ import {
 })
 export class CanvasDisplaysComponent implements OnInit, AfterViewInit {
   @Input() username!: string;
+  @Input() isPlayerReady = false;
 
   @ViewChild('playerCanvas') playerCanvas!: ElementRef<HTMLCanvasElement>;
 

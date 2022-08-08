@@ -1,6 +1,8 @@
 ﻿using Backend.Hubs;
 using Backend.Models;
 using Microsoft.AspNetCore.SignalR;
+using System.Reactive;
+using System.Reactive.Linq;
 
 namespace Backend.Services;
 
@@ -67,5 +69,21 @@ public class PlayerService
     public Player GetPlayerBySessionId(string sessionId)
     {
         return Players.FirstOrDefault(x => x.SessionId == sessionId) ?? throw new InvalidOperationException();
+    }
+
+    public void SetPlayersReadyState(string sessionId, bool ready)
+    {
+        var player = Players.Where(x => x.SessionId == sessionId).FirstOrDefault();
+        if (player == null) throw new  Exception("You're not logged into the game");
+        player.IsReady = ready;
+        MainClient.ClientProxy.SendAsync("PlayerUpdate", Players);
+        if (Players.All(x => x.IsReady))
+        {
+            MainClient.ClientProxy.SendAsync("AllPlayerReady", true);
+        }
+        else
+        {
+            MainClient.ClientProxy.SendAsync("AllPlayerReady", false);
+        }
     }
 }

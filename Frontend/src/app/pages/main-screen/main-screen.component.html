@@ -1,38 +1,49 @@
 <div class="flex-col flex w-full align-center p-8">
-  <span class="countdown font-mono text-9xl justify-center" *ngIf="!gameEnded">
-    <span style="--value:{{ this.indrawgyHub.timerUpdate$ | async }};"></span>
-  </span>
-  <span class="font-mono text-9xl justify-center" *ngIf="gameEnded"
-    >Game Ended!</span
+  <ngx-qrcode
+    *ngIf="
+      currentGameStatus == GameStatus.open ||
+      currentGameStatus == GameStatus.created
+    "
+    [elementType]="elementType"
+    [value]="(sessionService.sessionLink$ | async) ?? ''"
+    class="self-center"
+    [errorCorrectionLevel]="errorCorrection"
   >
+  </ngx-qrcode>
   <ng-container [ngSwitch]="gameMode">
     <ng-container *ngSwitchCase="GameMode.guess">
       <app-main-screen-guess></app-main-screen-guess>
     </ng-container>
     <ng-container *ngSwitchDefault>
-      <app-game-layout class="w-full h-[80vh]"></app-game-layout>
+      <div>
+        <span
+          class="countdown font-mono text-9xl justify-center"
+          *ngIf="currentGameStatus == GameStatus.started"
+        >
+          <span
+            style="--value:{{ this.indrawgyHub.timerUpdate$ | async }};"
+          ></span>
+        </span>
+        <span
+          class="font-mono text-9xl justify-center"
+          *ngIf="currentGameStatus == GameStatus.ended"
+          >Game Ended!</span
+        >
+        <div
+          *ngIf="currentGameStatus == GameStatus.starting"
+          class="justify-center"
+        >
+          <span class="text-5xl">Game starts in: </span>
+          <span class="countdown font-mono text-9xl">
+            <span
+              style="--value:{{
+                this.indrawgyHub.startSequenceTimer$ | async
+              }};"
+            ></span>
+          </span>
+        </div>
+      </div>
+      <app-game-layout class="w-full h-[79vh]"></app-game-layout>
     </ng-container>
   </ng-container>
-  <button class="btn btn-error self-end" (click)="resetGame()">
-    Reset Game
-  </button>
-  <button class="btn btn-error self-end" (click)="startGame()">
-    Start Game
-  </button>
 </div>
-<ngx-qrcode
-  [elementType]="elementType"
-  [value]="(sessionService.sessionLink$ | async) ?? ''"
-  class="self-center"
-  [errorCorrectionLevel]="errorCorrection"
->
-</ngx-qrcode>
-<div *ngIf="gameBegins || gameStarted || gameEnded">
-  <span class="countdown font-mono text-9xl justify-center" *ngIf="!gameEnded">
-    <span style="--value:{{ this.indrawgyHub.timerUpdate$ | async }};"></span>
-  </span>
-  <span class="font-mono text-9xl justify-center" *ngIf="gameEnded"
-    >Game Ended!</span
-  >
-</div>
-<app-game-layout class="w-full h-[79vh]"></app-game-layout>

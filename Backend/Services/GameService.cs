@@ -14,6 +14,8 @@ public class GameService
 
     private GameState GameState { get; set; }
     private IDisposable Timer { get; set; }
+    private bool StartSequenceStopped;
+    private bool StartSequenceStarted;
 
     public GameService(PlayerService playerService, IConfiguration configuration)
     {
@@ -38,7 +40,18 @@ public class GameService
     {
         if (GameState.GameStatus == GameStatus.Started) throw new Exception("Game is already running!");
         if (!IsMainClient(sessionId)) throw new Exception("Only the main screen can start the game");
-        GameState.GameStatus = GameStatus.Started;
+        SetGameStatus(GameStatus.Started);
+        //var maxTime = 60;
+        //Observable.Interval(TimeSpan.FromSeconds(1)).TakeWhile(x => x != maxTime + 1 && GameState.GameStatus == GameStatus.Started).Subscribe(async timer =>
+        //{
+
+        //    await _playerService.MainClient.ClientProxy.SendAsync("TimerUpdate", maxTime - timer);
+        //    if (timer == maxTime)
+        //    {
+        //        EndGame(sessionId);
+        //        return;
+        //    }
+        //});
 
         switch (GameState.GameMode)
         {
@@ -95,7 +108,7 @@ public class GameService
     {
         if (GameState.GameStatus == GameStatus.Ended) throw new Exception("Game hasn't even started!");
         if (!IsMainClient(sessionId)) throw new Exception("Only the main screen can end the game");
-        GameState.GameStatus = GameStatus.Ended;
+        SetGameStatus(GameStatus.Ended);
         await _playerService.All.SendAsync("GameEnded");
     }
 
@@ -114,6 +127,12 @@ public class GameService
     public GameMode GetGameMode()
     {
         return GameState.GameMode;
+    }
+    
+    public void SetGameStatus(GameStatus gameStatus)
+    {
+        GameState.GameStatus = gameStatus;
+        _playerService.All.SendAsync("CurrentGameStatus", GameState.GameStatus);
     }
 
     public bool GameHasStarted()
@@ -165,5 +184,34 @@ public class GameService
         await _playerService.All.SendAsync("RoundEnd");
         GameState.CurrentRound++;
         await SendWordToGuess();
+    }
+
+    public void BeginGameStartSequence(string sessionId)
+    {
+        //if(playerService.Players.Count < 2)
+        //{
+        //    return;
+        //}
+        var startSequenceTime = 10;
+        StartSequenceStopped = false;
+        SetGameStatus(GameStatus.Starting);
+        Observable.Interval(TimeSpan.FromSeconds(1)).TakeWhile(x =>
+        {
+            return x != startSequenceTime + 1 && !StartSequenceStopped;
+        }).Subscribe(async timer =>
+        {
+            await _playerService.MainClient.ClientProxy.SendAsync("StartSequenceTimer", startSequenceTime - timer);
+            if (timer == startSequenceTime)
+            {
+                StartGame(sessionId);
+            }
+        });
+    }
+
+    public void CancelGameStartSequence(string sessionId)
+    {
+        if (!IsMainClient(sessionId)) throw new Exception("You're not allowed to stop the game start sequence");
+        StartSequenceStopped = true;
+        SetGameStatus(GameStatus.Open);
     }
 }

@@ -31,6 +31,19 @@ public class GameController : BaseController
         return Ok();
     }
 
+    [HttpPost("beginGameStartSequence")]
+    public IActionResult BeginGameStartSequence()
+    {
+        _gameService.BeginGameStartSequence(Request.GetSessionId());
+        return Ok();
+    }
+    [HttpPost("stopGameStartSequence")]
+    public IActionResult StopGameStartSequence()
+    {
+        _gameService.CancelGameStartSequence(Request.GetSessionId());
+        return Ok();
+    }
+
     [HttpGet("gameStatus")]
     public IActionResult GetGameStatus()
     {
