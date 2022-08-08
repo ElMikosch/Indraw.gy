@@ -1,3 +1,8 @@
+<ng-container *ngIf="(currentGameStatus$ | async) === GameStatus.created">
+  <div *ngFor="let player of players$ | async">
+    {{ player.username }} {{ player.isReady }}
+  </div>
+</ng-container>
 <ng-container *ngIf="wordToGuess$ | async as word">
   <app-guess-placeholder [word$]="wordToGuess$"></app-guess-placeholder>
   <div class="w-72">
@@ -7,9 +12,10 @@
   <div class="w-full border border-primary mt-8">
     <span class="text-xl mb-4">Bisherige Vermutungen:</span>
     <div *ngFor="let g of guessList$ | async">
-      <span *ngIf="!g.isCorrect">{{g.player}}: {{g.guessText}}</span>
-      <span *ngIf="g.isCorrect"
-            class="text-green-500">{{g.player}} hat richtig geraten</span>
+      <span *ngIf="!g.isCorrect">{{ g.player }}: {{ g.guessText }}</span>
+      <span *ngIf="g.isCorrect" class="text-green-500"
+        >{{ g.player }} hat richtig geraten</span
+      >
     </div>
   </div>
 </ng-container>

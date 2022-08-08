@@ -40,7 +40,7 @@ public class PlayerService
         MainClient.ClientProxy.SendAsync("PlayerUpdate", Players);
     }
 
-    public void UpdateConnection(string sessionId, string connectionId, IClientProxy proxy)
+    public async Task UpdateConnection(string sessionId, string connectionId, IClientProxy proxy)
     {
         var player = Players.FirstOrDefault(x => x.SessionId == sessionId);
         if (player != null)
@@ -52,6 +52,7 @@ public class PlayerService
         {
             MainClient.ClientProxy = proxy;
             MainClient.ConnectionId = connectionId;
+            await SendInitialValues();
         }
     }
 
@@ -73,17 +74,15 @@ public class PlayerService
 
     public void SetPlayersReadyState(string sessionId, bool ready)
     {
-        var player = Players.Where(x => x.SessionId == sessionId).FirstOrDefault();
-        if (player == null) throw new  Exception("You're not logged into the game");
+        var player = Players.FirstOrDefault(x => x.SessionId == sessionId);
+        if (player == null) throw new Exception("You're not logged into the game");
         player.IsReady = ready;
         MainClient.ClientProxy.SendAsync("PlayerUpdate", Players);
-        if (Players.All(x => x.IsReady))
-        {
-            MainClient.ClientProxy.SendAsync("AllPlayerReady", true);
-        }
-        else
-        {
-            MainClient.ClientProxy.SendAsync("AllPlayerReady", false);
-        }
+        MainClient.ClientProxy.SendAsync("AllPlayerReady", Players.All(x => x.IsReady));
+    }
+
+    private async Task SendInitialValues()
+    {
+        await MainClient.ClientProxy.SendAsync("PlayerUpdate", Players);
     }
 }

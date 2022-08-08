@@ -6,18 +6,18 @@ namespace Backend.Controllers
 {
     public class PlayerController : BaseController
     {
-        private readonly PlayerService playerService;
+        private readonly PlayerService _playerService;
 
         public PlayerController(PlayerService playerService)
         {
-            this.playerService = playerService;
+            _playerService = playerService;
         }
 
         [HttpPost("changePlayerReadyState")]
         public void ChangePlayerReadyState([FromBody] bool ready)
         {
             var sessionId = Request.GetSessionId();
-            this.playerService.SetPlayersReadyState(sessionId, ready);
+            _playerService.SetPlayersReadyState(sessionId, ready);
 
         }
     }

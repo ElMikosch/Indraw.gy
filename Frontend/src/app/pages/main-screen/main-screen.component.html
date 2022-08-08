@@ -34,10 +34,7 @@
       </span>
     </div>
   </div>
-  <ng-container
-    [ngSwitch]="gameMode"
-    *ngIf="currentGameStatus === GameStatus.started"
-  >
+  <ng-container [ngSwitch]="gameMode">
     <ng-container *ngSwitchCase="GameMode.guess">
       <app-main-screen-guess></app-main-screen-guess>
     </ng-container>

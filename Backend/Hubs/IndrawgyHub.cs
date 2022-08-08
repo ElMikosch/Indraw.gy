@@ -14,9 +14,9 @@ namespace Backend.Hubs
             _gameService = gameService;
         }
 
-        public void Register(string sessionId)
+        public async Task Register(string sessionId)
         {
-            _playerService.UpdateConnection(sessionId, Context.ConnectionId, Clients.Caller);
+            await _playerService.UpdateConnection(sessionId, Context.ConnectionId, Clients.Caller);
         }
 
         public async Task StartRound(string sessionId)
