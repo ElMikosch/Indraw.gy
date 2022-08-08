@@ -5,5 +5,8 @@
   "login": "/api/login",
   "playerAlreadyInGame": "/api/login/playerAlreadyInGame",
   "isMainClient": "/api/game/isMainClient",
-  "resetGame": "/api/game/resetGame"
+  "resetGame": "/api/game/resetGame",
+  "beginGameStartSequence": "/api/game/beginGameStartSequence",
+  "stopGameStartSequence": "/api/game/stopGameStartSequence",
+  "changePlayerReadyState": "/api/player/changePlayerReadyState"
 }

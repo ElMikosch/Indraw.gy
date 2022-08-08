@@ -10,4 +10,5 @@ public class Player
     public IClientProxy ClientProxy { get; set; }
     public Dictionary<int, string> Pictures { get; set; }
     public int Points { get; set; }
+    public bool IsReady { get; set; }
 }

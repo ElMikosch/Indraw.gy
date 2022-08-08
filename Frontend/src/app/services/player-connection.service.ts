@@ -4,7 +4,9 @@ import {
   HubConnectionBuilder,
   LogLevel,
 } from '@microsoft/signalr';
-import { ReplaySubject } from 'rxjs';
+import { Observable, ReplaySubject } from 'rxjs';
+import { GameStatus } from '../models/game-status';
+import { Player } from '../models/player';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +15,16 @@ export class PlayerConnectionService {
   hubConnection: HubConnection;
   sessionId: string;
 
-  constructor() {
+  timerUpdate$ = new Observable<number>();
+  gameEnded$ = new Observable<unknown>();
+  playerUpdate$ = new Observable<Player[]>();
+  allPlayerReady$ = new Observable<boolean>();
+  startSequenceTimer$ = new Observable<number>();
+  currentGameStatus$ = new Observable<GameStatus>();
+
+  constructor() {}
+
+  public connect(): void {
     this.hubConnection = new HubConnectionBuilder()
       .withUrl('/hubs/player')
       .withAutomaticReconnect()
@@ -53,5 +64,13 @@ export class PlayerConnectionService {
   private async register() {
     await this.hubConnection.invoke('RegisterPlayer', this.sessionId);
     console.log('registered');
+  }
+
+  async beginGameStartSequence(): Promise<void> {
+    await this.hubConnection.invoke('beginGameStartSequence');
+  }
+
+  async stopGameStartSequence(): Promise<void> {
+    await this.hubConnection.invoke('');
   }
 }

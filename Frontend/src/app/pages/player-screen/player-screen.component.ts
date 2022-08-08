@@ -12,7 +12,14 @@ import { PlayerConnectionService } from '../../services/player-connection.servic
   styleUrls: ['./player-screen.component.scss'],
 })
 export class PlayerScreenComponent implements OnInit {
-  constructor(private player: PlayerConnectionService) {}
+  playerReady = false;
+
+  constructor(private facade: PlayerScreenFacade) {}
 
   async ngOnInit(): Promise<void> {}
+
+  changePlayerReadyState(): void {
+    this.playerReady = !this.playerReady;
+    this.facade.changePlayerReadyState(this.playerReady);
+  }
 }

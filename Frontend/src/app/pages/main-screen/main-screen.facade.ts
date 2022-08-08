@@ -8,4 +8,12 @@ export class MainScreenFacade {
   public async resetGame() {
     await this.api.post('resetGame', {});
   }
+
+  public async startGameSequence() {
+    await this.api.post('beginGameStartSequence', {});
+  }
+
+  public async stopGameSequence() {
+    await this.api.post('stopGameStartSequence', {});
+  }
 }
