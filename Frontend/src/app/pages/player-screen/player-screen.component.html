@@ -1,1 +1,1 @@
-<button class="btn btn-primary" (click)="changePlayerReadyState()">{{playerReady ? 'Ready!' : 'Unready'}}</button>
+<button class="btn btn-primary" (click)="changePlayerReadyState()" [disabled]="(indrawgyHub.currentGameStatus$ | async) == GameStatus.started">{{playerReady ? 'Ready!' : 'Unready'}}</button>
