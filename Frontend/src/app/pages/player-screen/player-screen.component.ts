@@ -5,6 +5,7 @@ import { GameMode } from 'src/app/models/game-mode';
 import { PlayerGuessComponent } from '../../components/player-guess/player-guess.component';
 import { GameStatus } from '../../models/game-status';
 import { PlayerScreenFacade } from './player-screen.facade';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 @Component({
   selector: 'app-player-screen',
@@ -14,6 +15,7 @@ import { PlayerScreenFacade } from './player-screen.facade';
   templateUrl: './player-screen.component.html',
   styleUrls: ['./player-screen.component.scss'],
 })
+@UntilDestroy()
 export class PlayerScreenComponent implements OnInit {
   constructor(
     public hub: IndrawgyHubService,
@@ -29,6 +31,9 @@ export class PlayerScreenComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     this.gameMode = await this.facade.getGameMode();
     this.gameStatus = await this.facade.getGameStatus();
+    this.hub.gameEnded$
+      .pipe(untilDestroyed(this))
+      .subscribe(() => (this.playerReady = false));
   }
 
   changePlayerReadyState(): void {

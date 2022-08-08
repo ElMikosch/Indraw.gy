@@ -114,8 +114,9 @@ public class GameService
 
     public void ResetGame(string sessionId)
     {
-        if (GameState.GameStatus == GameStatus.Started) throw new Exception("Game is already running!");
+        //Todo: implement correct resetting with options (Keep player / new players)
         if (!IsMainClient(sessionId)) throw new Exception("Only the main screen can reset the game");
+        SetGameStatus(GameStatus.Created);
         GameState = new GameState();
     }
 
@@ -162,7 +163,7 @@ public class GameService
     {
         if (GameState.GameStatus == GameStatus.Ended) throw new Exception("Game hasn't even started!");
         if (!IsMainClient(sessionId)) throw new Exception("Only the main screen can start the next round");
-        if (GameState.CurrentRound >= GameState.Rounds) ResetGame(sessionId);
+        if (GameState.CurrentRound >= GameState.Rounds) await EndGame(sessionId); //Todo: show scores and
         const int maxTime = 30;
         GameState.FinishedPlayers = new List<string>();
         GameState.Guesses = new List<Guess>();
@@ -195,15 +196,12 @@ public class GameService
         var startSequenceTime = 10;
         StartSequenceStopped = false;
         SetGameStatus(GameStatus.Starting);
-        Observable.Interval(TimeSpan.FromSeconds(1)).TakeWhile(x =>
-        {
-            return x != startSequenceTime + 1 && !StartSequenceStopped;
-        }).Subscribe(async timer =>
+        Observable.Interval(TimeSpan.FromSeconds(1)).TakeWhile(x => x != startSequenceTime + 1 && !StartSequenceStopped).Subscribe(async timer =>
         {
             await _playerService.MainClient.ClientProxy.SendAsync("StartSequenceTimer", startSequenceTime - timer);
             if (timer == startSequenceTime)
             {
-                StartGame(sessionId);
+               await StartGame(sessionId);
             }
         });
     }

@@ -33,9 +33,6 @@ export class MainScreenComponent implements OnInit {
   public errorCorrection = 'L' as NgxQrcodeErrorCorrectionLevels;
   public gameMode!: GameMode;
   GameMode = GameMode;
-  public gameEnded = false;
-  public gameBegins = false;
-  public gameStarted = false;
   currentGameStatus: GameStatus = GameStatus.created;
   GameStatus = GameStatus;
 
@@ -49,10 +46,6 @@ export class MainScreenComponent implements OnInit {
     this.sessionService.createLoginLink();
     this.gameMode = await this.facade.getGameMode();
     console.log(this.gameMode);
-
-    this.indrawgyHub.gameEnded$
-      .pipe(untilDestroyed(this))
-      .subscribe(() => (this.gameEnded = true));
 
     this.indrawgyHub.allPlayerReady$
       .pipe(untilDestroyed(this))
