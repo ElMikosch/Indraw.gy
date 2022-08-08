@@ -24,7 +24,6 @@ export class MainMenuComponent implements OnInit {
 
   async onSelectGameMode(gameMode: GameMode) {
     await this.facade.createGame(gameMode, this.rounds);
-    await this.facade.registerMainClient();
     await this.router.navigate(['game']);
   }
 }
