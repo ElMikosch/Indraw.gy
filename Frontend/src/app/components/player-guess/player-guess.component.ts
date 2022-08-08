@@ -51,7 +51,7 @@ export class PlayerGuessComponent {
   }
 
   canGuess() {
-    return this.guess !== '' && !this.guessCorrect;
+    return this.guess !== '' && !this.guessCorrect && this.isRoundRunning;
   }
 
   async sendGuess() {
