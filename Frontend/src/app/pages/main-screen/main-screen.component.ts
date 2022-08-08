@@ -61,8 +61,4 @@ export class MainScreenComponent implements OnInit {
     await this.facade.resetGame();
     location.reload();
   }
-
-  async startGame() {
-    await this.facade.startGame();
-  }
 }
