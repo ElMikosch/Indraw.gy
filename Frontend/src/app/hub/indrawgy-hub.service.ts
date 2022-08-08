@@ -5,6 +5,7 @@ import {
   LogLevel,
 } from '@microsoft/signalr';
 import { Observable, ReplaySubject } from 'rxjs';
+import { GameStatus } from '../models/game-status';
 import { Player } from '../models/player';
 
 @Injectable({
@@ -17,6 +18,9 @@ export class IndrawgyHubService {
   timerUpdate$ = new Observable<number>();
   gameEnded$ = new Observable<unknown>();
   playerUpdate$ = new Observable<Player[]>();
+  allPlayerReady$ = new Observable<boolean>();
+  startSequenceTimer$ = new Observable<number>();
+  currentGameStatus$ = new Observable<GameStatus>();
 
   constructor() {}
 
@@ -55,5 +59,13 @@ export class IndrawgyHubService {
 
   async registerMainClient(): Promise<void> {
     await this.hubConnection.invoke('RegisterMainClient', this.sessionId);
+  }
+
+  async beginGameStartSequence(): Promise<void> {
+    await this.hubConnection.invoke('beginGameStartSequence');
+  }
+
+  async stopGameStartSequence(): Promise<void> {
+    await this.hubConnection.invoke('');
   }
 }

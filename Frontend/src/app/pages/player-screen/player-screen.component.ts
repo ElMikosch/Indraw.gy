@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { IndrawgyHubService } from 'src/app/hub/indrawgy-hub.service';
+import { GameStatus } from 'src/app/models/game-status';
 import { PlayerScreenFacade } from './player-screen.facade';
 
 @Component({
@@ -11,7 +13,20 @@ import { PlayerScreenFacade } from './player-screen.facade';
   styleUrls: ['./player-screen.component.scss'],
 })
 export class PlayerScreenComponent implements OnInit {
-  constructor() {}
+  playerReady = false;
+  GameStatus = GameStatus;
 
-  async ngOnInit(): Promise<void> {}
+  constructor(
+    private facade: PlayerScreenFacade,
+    public indrawgyHub: IndrawgyHubService
+  ) {}
+
+  async ngOnInit(): Promise<void> {
+    await this.indrawgyHub.registerPlayer();
+  }
+
+  changePlayerReadyState(): void {
+    this.playerReady = !this.playerReady;
+    this.facade.changePlayerReadyState(this.playerReady);
+  }
 }

@@ -6,4 +6,5 @@ public class GameState
     public int Rounds { get; set; }
     public GameStatus GameStatus { get; set; } = GameStatus.Open;
     public string MainSessionId { get; set; }
+
 }
