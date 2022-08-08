@@ -1,4 +1,5 @@
 ﻿import { Injectable } from '@angular/core';
+import { GameMode } from '../../models/game-mode';
 import { IndrawgyApi } from '../../services/indrawgy.api';
 
 @Injectable()
@@ -15,5 +16,9 @@ export class MainScreenFacade {
 
   public async stopGameSequence() {
     await this.api.post('stopGameStartSequence', {});
+  }
+
+  public async getGameMode(): Promise<GameMode> {
+    return await this.api.get<GameMode>('gameMode');
   }
 }

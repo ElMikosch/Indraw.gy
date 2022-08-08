@@ -1,0 +1,15 @@
+<ng-container *ngIf="wordToGuess$ | async as word">
+  <app-guess-placeholder [word$]="wordToGuess$"></app-guess-placeholder>
+  <div class="w-72">
+    <app-ai-drawing [doodleKey]="word.key"></app-ai-drawing>
+  </div>
+
+  <div class="w-full border border-primary mt-8">
+    <span class="text-xl mb-4">Bisherige Vermutungen:</span>
+    <div *ngFor="let g of guessList$ | async">
+      <span *ngIf="!g.isCorrect">{{g.player}}: {{g.guessText}}</span>
+      <span *ngIf="g.isCorrect"
+            class="text-green-500">{{g.player}} hat richtig geraten</span>
+    </div>
+  </div>
+</ng-container>

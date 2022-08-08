@@ -1,14 +1,12 @@
-<h1 class="my-8 text-5xl flex justify-center">Indraw.gy</h1>
+<h1 class="my-8 text-5xl xl:text-9xl 3xl:text-[12rem] flex justify-center">Indraw.gy</h1>
 <div class="m-8">
   <div class="form-control w-full">
-    <label class="label">
-      <span class="label-text">Username</span>
-    </label>
     <input type="text"
-           class="input input-bordered"
+           class="input input-bordered input-lg xl:h-24 3xl:h-24 text-1xl xl:text-3xl 3xl:text-5xl"
            placeholder="Username..."
            [(ngModel)]="username" />
-    <button class="btn btn-primary mt-4"
-            (click)="login()">Login</button>
+    <button class="btn btn-primary w-full btn-lg mt-4 xl:h-24 3xl:h-24 text-1xl xl:text-3xl 3xl:text-5xl"
+            (click)="login()"
+            [disabled]="!canLogin()">Login</button>
   </div>
 </div>

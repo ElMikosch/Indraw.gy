@@ -6,9 +6,11 @@ import {
   NgxQrcodeErrorCorrectionLevels,
   NgxQRCodeModule,
 } from '@techiediaries/ngx-qrcode';
+import { MainScreenGuessComponent } from 'src/app/components/main-screen-guess/main-screen-guess.component';
 import { IndrawgyHubService } from 'src/app/hub/indrawgy-hub.service';
 import { GameStatus } from 'src/app/models/game-status';
 import { SessionService } from 'src/app/services/session.service';
+import { GameMode } from '../../models/game-mode';
 import { GameLayoutComponent } from './game-layout/game-layout.component';
 import { MainScreenFacade } from './main-screen.facade';
 
@@ -16,7 +18,12 @@ import { MainScreenFacade } from './main-screen.facade';
 @Component({
   selector: 'app-main-screen',
   standalone: true,
-  imports: [CommonModule, NgxQRCodeModule, GameLayoutComponent],
+  imports: [
+    CommonModule,
+    NgxQRCodeModule,
+    GameLayoutComponent,
+    MainScreenGuessComponent,
+  ],
   providers: [MainScreenFacade],
   templateUrl: './main-screen.component.html',
   styleUrls: ['./main-screen.component.scss'],
@@ -24,6 +31,8 @@ import { MainScreenFacade } from './main-screen.facade';
 export class MainScreenComponent implements OnInit {
   public elementType = 'url' as NgxQrcodeElementTypes;
   public errorCorrection = 'L' as NgxQrcodeErrorCorrectionLevels;
+  public gameMode!: GameMode;
+  GameMode = GameMode;
   public gameEnded = false;
   public gameBegins = false;
   public gameStarted = false;
@@ -38,9 +47,8 @@ export class MainScreenComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.sessionService.createLoginLink();
-    setTimeout(() => {
-      this.indrawgyHub.registerMainClient();
-    }, 1000);
+    this.gameMode = await this.facade.getGameMode();
+    console.log(this.gameMode);
 
     this.indrawgyHub.gameEnded$
       .pipe(untilDestroyed(this))

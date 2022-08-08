@@ -6,32 +6,27 @@ namespace Backend.Hubs
     public class IndrawgyHub : Hub
     {
         private readonly PlayerService _playerService;
-        private readonly GameService gameService;
+        private readonly GameService _gameService;
 
-        public IndrawgyHub(PlayerService playerService)
+        public IndrawgyHub(PlayerService playerService, GameService gameService)
         {
             _playerService = playerService;
-            this.gameService = gameService;
+            _gameService = gameService;
         }
 
-        public override Task OnConnectedAsync()
-        {
-            return base.OnConnectedAsync();
-        }
-
-        public void RegisterPlayer(string sessionId)
+        public void Register(string sessionId)
         {
             _playerService.UpdateConnection(sessionId, Context.ConnectionId, Clients.Caller);
         }
 
-        public void RegisterMainClient(string sessionId)
+        public async Task StartRound(string sessionId)
         {
-            _playerService.UpdateMainClientConnection(sessionId, Context.ConnectionId, Clients.Caller);
+            await _gameService.StartNextRound(sessionId);
         }
 
         public void BeginGameStartSequence(string sessionId)
         {
-            gameService.BeginGameStartSequence(sessionId);
+            _gameService.BeginGameStartSequence(sessionId);
         }
     }
 }

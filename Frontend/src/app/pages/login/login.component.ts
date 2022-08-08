@@ -24,4 +24,8 @@ export class LoginComponent implements OnInit {
     await this.facade.login(this.username);
     await this.router.navigate(['player']);
   }
+
+  canLogin() {
+    return this.username !== '';
+  }
 }

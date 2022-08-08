@@ -1,0 +1,27 @@
+<div *ngIf="guessCorrect"
+     class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center content-center">
+  <span class="text-2xl text-center self-center text-green-500">Richtig erraten. Entspann dich bis zur nächsten
+    Runde.</span>
+</div>
+
+<div *ngIf="!isRoundRunning"
+     class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center content-center">
+  <span class="text-2xl text-center self-center text-red-500">Die Runde is vorbei.</span>
+</div>
+<div class="m-8">
+  <app-guess-placeholder [word$]="wordToGuess$"></app-guess-placeholder>
+  <div class="form-control w-full">
+    <input type="text"
+           class="input input-bordered input-lg xl:h-24 3xl:h-24 text-1xl xl:text-3xl 3xl:text-5xl"
+           placeholder="Vermutung"
+           [(ngModel)]="guess" />
+    <button class="btn btn-primary btn-lg mt-4 xl:h-24 3xl:h-24 text-1xl xl:text-3xl 3xl:text-5xl"
+            (click)="sendGuess()"
+            [disabled]="!canGuess()">Absenden!</button>
+  </div>
+
+  <div class="w-full border border-primary mt-8">
+    <span class="text-xl mb-4">Bisherige Vermutungen:</span>
+    <div *ngFor="let g of guessList">{{g}}</div>
+  </div>
+</div>

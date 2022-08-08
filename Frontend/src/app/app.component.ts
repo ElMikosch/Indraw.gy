@@ -4,7 +4,6 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { Guid } from 'guid-typescript';
-import { IndrawgyHubService } from './hub/indrawgy-hub.service';
 
 @Component({
   standalone: true,
@@ -14,14 +13,12 @@ import { IndrawgyHubService } from './hub/indrawgy-hub.service';
   imports: [HttpClientModule, FormsModule, CommonModule, RouterModule],
 })
 export class AppComponent {
-  constructor(private indrawgyHub: IndrawgyHubService) {
+  constructor() {
     let sessionId = sessionStorage.getItem('sessionId');
 
     if (!sessionId) {
       sessionId = Guid.create().toString();
       sessionStorage.setItem('sessionId', sessionId);
     }
-
-    this.indrawgyHub.connect();
   }
 }

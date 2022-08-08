@@ -25,9 +25,9 @@ public class GameController : BaseController
     }
 
     [HttpPost("startGame")]
-    public IActionResult StartGame()
+    public async Task<IActionResult> StartGame()
     {
-        _gameService.StartGame(Request.GetSessionId());
+        await _gameService.StartGame(Request.GetSessionId());
         return Ok();
     }
 
@@ -48,6 +48,12 @@ public class GameController : BaseController
     public IActionResult GetGameStatus()
     {
         return Ok(_gameService.GetGameStatus());
+    }
+
+    [HttpGet("gameMode")]
+    public IActionResult GetGameMode()
+    {
+        return Ok(_gameService.GetGameMode());
     }
 
     [HttpGet("isMainClient")]

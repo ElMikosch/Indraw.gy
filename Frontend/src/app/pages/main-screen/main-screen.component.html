@@ -1,23 +1,49 @@
 <div class="flex-col flex w-full align-center p-8">
   <ngx-qrcode
-  *ngIf="currentGameStatus == GameStatus.open || currentGameStatus == GameStatus.created"
+    *ngIf="
+      currentGameStatus == GameStatus.open ||
+      currentGameStatus == GameStatus.created
+    "
     [elementType]="elementType"
     [value]="(sessionService.sessionLink$ | async) ?? ''"
     class="self-center"
-    [errorCorrectionLevel]="errorCorrection">
+    [errorCorrectionLevel]="errorCorrection"
+  >
   </ngx-qrcode>
-  <div>
-    <span class="countdown font-mono text-9xl justify-center" *ngIf="currentGameStatus == GameStatus.started">
-      <span style="--value:{{this.indrawgyHub.timerUpdate$ | async}};"></span>
-    </span>
-    <span class="font-mono text-9xl justify-center"  *ngIf="currentGameStatus == GameStatus.ended">Game Ended!</span>
-    <div *ngIf="currentGameStatus == GameStatus.starting" class="justify-center">
-      <span class="text-5xl">Game starts in: </span>
-      <span class="countdown font-mono text-9xl">
-        <span style="--value:{{this.indrawgyHub.startSequenceTimer$ | async}};"></span>
-      </span>
-    </div>
-  </div>
-  <app-game-layout class="w-full h-[79vh]"></app-game-layout>
+  <ng-container [ngSwitch]="gameMode">
+    <ng-container *ngSwitchCase="GameMode.guess">
+      <app-main-screen-guess></app-main-screen-guess>
+    </ng-container>
+    <ng-container *ngSwitchDefault>
+      <div>
+        <span
+          class="countdown font-mono text-9xl justify-center"
+          *ngIf="currentGameStatus == GameStatus.started"
+        >
+          <span
+            style="--value:{{ this.indrawgyHub.timerUpdate$ | async }};"
+          ></span>
+        </span>
+        <span
+          class="font-mono text-9xl justify-center"
+          *ngIf="currentGameStatus == GameStatus.ended"
+          >Game Ended!</span
+        >
+        <div
+          *ngIf="currentGameStatus == GameStatus.starting"
+          class="justify-center"
+        >
+          <span class="text-5xl">Game starts in: </span>
+          <span class="countdown font-mono text-9xl">
+            <span
+              style="--value:{{
+                this.indrawgyHub.startSequenceTimer$ | async
+              }};"
+            ></span>
+          </span>
+        </div>
+      </div>
+      <app-game-layout class="w-full h-[79vh]"></app-game-layout>
+    </ng-container>
+  </ng-container>
 </div>
-
