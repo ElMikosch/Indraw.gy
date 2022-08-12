@@ -26,10 +26,7 @@ export class PlayerDrawComponent implements OnInit {
     private hub: IndrawgyHubService
   ) {}
 
-  ngOnInit(): void {
-    const sdb = create(this.canvas.nativeElement);
-    sdb.setLineColor('red');
-  }
+  ngOnInit(): void {}
 
   ngAfterViewInit(): void {
     this.canvas.nativeElement.style.width = '100%';
@@ -41,39 +38,52 @@ export class PlayerDrawComponent implements OnInit {
     this.context = this.canvas.nativeElement.getContext('2d')!;
     this.canvastop = this.canvas.nativeElement.offsetTop;
 
-    this.context.strokeStyle = '#000000';
-    this.context.lineCap = 'round';
-    this.context.lineJoin = 'round';
-    this.context.lineWidth = 5;
+    const sdb = create(this.canvas.nativeElement);
+    sdb.setLineColor('red');
+    sdb.setLineSize(5);
 
-    this.canvas.nativeElement.ontouchmove = (e: TouchEvent) => {
-      e.preventDefault();
+    sdb.observer.on('draw', (coords: any) => {
+      console.log(coords);
+      this.hub.drawLine({ x: coords.x, y: coords.y });
+    });
 
-      var newx = e.touches[0].clientX;
-      var newy = e.touches[0].clientY - this.canvastop;
+    sdb.observer.on('drawBegin', (coords: any) => {
+      this.hub.drawPoint({ x: coords.x, y: coords.y });
+    });
 
-      this.drawService.line(this.context, {
-        fromx: this.lastx,
-        fromy: this.lasty,
-        tox: newx,
-        toy: newy,
-      });
-      this.hub.drawLine({
-        x: newx,
-        y: newy,
-      });
-      this.lastx = newx;
-      this.lasty = newy;
-    };
+    // this.context.strokeStyle = '#000000';
+    // this.context.lineCap = 'round';
+    // this.context.lineJoin = 'round';
+    // this.context.lineWidth = 5;
 
-    this.canvas.nativeElement.ontouchstart = (e: TouchEvent) => {
-      e.preventDefault();
+    // this.canvas.nativeElement.ontouchmove = (e: TouchEvent) => {
+    //   e.preventDefault();
 
-      this.lastx = e.touches[0].clientX;
-      this.lasty = e.touches[0].clientY - this.canvastop;
+    //   var newx = e.touches[0].clientX;
+    //   var newy = e.touches[0].clientY - this.canvastop;
 
-      this.drawService.dot(this.context, { x: this.lastx, y: this.lasty });
-      this.hub.drawPoint({ x: e.touches[0].clientX, y: e.touches[0].clientY });
-    };
+    //   this.drawService.line(this.context, {
+    //     fromx: this.lastx,
+    //     fromy: this.lasty,
+    //     tox: newx,
+    //     toy: newy,
+    //   });
+    //   this.hub.drawLine({
+    //     x: newx,
+    //     y: newy,
+    //   });
+    //   this.lastx = newx;
+    //   this.lasty = newy;
+    // };
+
+    // this.canvas.nativeElement.ontouchstart = (e: TouchEvent) => {
+    //   e.preventDefault();
+
+    //   this.lastx = e.touches[0].clientX;
+    //   this.lasty = e.touches[0].clientY - this.canvastop;
+
+    //   this.drawService.dot(this.context, { x: this.lastx, y: this.lasty });
+    //   this.hub.drawPoint({ x: e.touches[0].clientX, y: e.touches[0].clientY });
+    // };
   }
 }

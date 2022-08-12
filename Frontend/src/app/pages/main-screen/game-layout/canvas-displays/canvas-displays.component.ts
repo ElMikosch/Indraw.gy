@@ -54,7 +54,7 @@ export class CanvasDisplaysComponent implements OnInit, AfterViewInit {
       .pipe(untilDestroyed(this))
       .subscribe((coordinates) => {
         const newx = coordinates.x;
-        const newy = coordinates.y - this.canvastop;
+        const newy = coordinates.y;
         this.drawService.line(this.context, {
           fromx: this.lastx,
           fromy: this.lasty,
@@ -69,7 +69,7 @@ export class CanvasDisplaysComponent implements OnInit, AfterViewInit {
       .pipe(untilDestroyed(this))
       .subscribe((coordinates) => {
         this.lastx = coordinates.x;
-        this.lasty = coordinates.y - this.canvastop;
+        this.lasty = coordinates.y;
 
         this.drawService.dot(this.context, { x: this.lastx, y: this.lasty });
       });
