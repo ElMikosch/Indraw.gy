@@ -53,6 +53,9 @@ public class PlayerService
             MainClient.ClientProxy = proxy;
             MainClient.ConnectionId = connectionId;
         }
+
+        if (MainClient.ClientProxy != null)
+            MainClient.ClientProxy.SendAsync("PlayerUpdate", Players);
     }
 
     public bool PlayerAlreadyInGame(string sessionId)
@@ -74,7 +77,7 @@ public class PlayerService
     public void SetPlayersReadyState(string sessionId, bool ready)
     {
         var player = Players.Where(x => x.SessionId == sessionId).FirstOrDefault();
-        if (player == null) throw new  Exception("You're not logged into the game");
+        if (player == null) throw new Exception("You're not logged into the game");
         player.IsReady = ready;
         MainClient.ClientProxy.SendAsync("PlayerUpdate", Players);
         if (Players.All(x => x.IsReady))

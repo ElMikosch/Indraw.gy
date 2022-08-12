@@ -9,6 +9,8 @@ import { DoodleNetEntry } from '../models/doodle-net-entry';
 import { GameStatus } from '../models/game-status';
 import { Guess } from '../models/guess';
 import { Player } from '../models/player';
+import { Line } from '../models/realtime-models/draw-line';
+import { Point } from '../models/realtime-models/draw-point';
 
 @Injectable({
   providedIn: 'root',
@@ -27,6 +29,8 @@ export class IndrawgyHubService {
   allPlayerReady$ = new Observable<boolean>();
   startSequenceTimer$ = new Observable<number>();
   currentGameStatus$ = new Observable<GameStatus>();
+  drawPointOnMainClient$ = new Observable<Point>();
+  drawLineOnMainClient$ = new Observable<Line>();
 
   constructor() {
     this.hubConnection = new HubConnectionBuilder()
@@ -77,5 +81,13 @@ export class IndrawgyHubService {
 
   async stopGameStartSequence(): Promise<void> {
     await this.hubConnection.invoke('');
+  }
+
+  async drawPoint(data: Point): Promise<void> {
+    await this.hubConnection.invoke('drawPoint', data);
+  }
+
+  async drawLine(data: Line): Promise<void> {
+    await this.hubConnection.invoke('drawLine', data);
   }
 }

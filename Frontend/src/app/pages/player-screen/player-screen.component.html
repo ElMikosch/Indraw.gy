@@ -2,7 +2,7 @@
   <ng-container *ngSwitchCase="GameMode.guess">
     <app-player-guess></app-player-guess>
   </ng-container>
-  <ng-container *ngSwitchDefault> DRAW COMPONENT</ng-container>
+  <ng-container *ngSwitchDefault><app-player-draw></app-player-draw></ng-container>
 </ng-container>
 
 <ng-container *ngIf="gameStatus === GameStatus.created">

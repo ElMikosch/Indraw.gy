@@ -1,16 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { PlayerDrawComponent } from 'src/app/components/player-draw/player-draw.component';
 import { IndrawgyHubService } from 'src/app/hub/indrawgy-hub.service';
 import { GameMode } from 'src/app/models/game-mode';
 import { PlayerGuessComponent } from '../../components/player-guess/player-guess.component';
 import { GameStatus } from '../../models/game-status';
 import { PlayerScreenFacade } from './player-screen.facade';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 @Component({
   selector: 'app-player-screen',
   standalone: true,
-  imports: [CommonModule, PlayerGuessComponent],
+  imports: [CommonModule, PlayerGuessComponent, PlayerDrawComponent],
   providers: [PlayerScreenFacade],
   templateUrl: './player-screen.component.html',
   styleUrls: ['./player-screen.component.scss'],

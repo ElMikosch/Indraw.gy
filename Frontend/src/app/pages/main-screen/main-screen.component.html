@@ -36,12 +36,13 @@
   </div>
   <ng-container
     [ngSwitch]="gameMode"
-    *ngIf="currentGameStatus === GameStatus.started"
   >
     <ng-container *ngSwitchCase="GameMode.guess">
-      <app-main-screen-guess></app-main-screen-guess>
+      <ng-container>
+        <app-main-screen-guess *ngIf="currentGameStatus === GameStatus.started"></app-main-screen-guess>
+      </ng-container> 
     </ng-container>
-    <ng-container *ngSwitchDefault>
+    <ng-container *ngSwitchCase="GameMode.draw">
       <app-game-layout class="w-full h-[79vh]"></app-game-layout>
     </ng-container>
   </ng-container>
