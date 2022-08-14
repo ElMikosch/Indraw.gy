@@ -2,15 +2,17 @@
   <ng-container *ngSwitchCase="GameMode.guess">
     <app-player-guess></app-player-guess>
   </ng-container>
-  <ng-container *ngSwitchDefault> DRAW COMPONENT</ng-container>
+  <ng-container *ngSwitchDefault
+    ><app-player-draw></app-player-draw
+  ></ng-container>
 </ng-container>
 
-<ng-container *ngIf="gameStatus === GameStatus.created">
+<ng-container *ngIf="(currentGameStatus$ | async) === GameStatus.created">
   <div class="m-8">
     <button
       class="btn btn-primary btn-lg w-full"
       (click)="changePlayerReadyState()"
-      [disabled]="(hub.currentGameStatus$ | async) == GameStatus.started"
+      [disabled]="(currentGameStatus$ | async) == GameStatus.started"
     >
       {{ playerReady ? "Unready!" : "Ready" }}
     </button>

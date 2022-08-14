@@ -25,7 +25,7 @@ public class PlayerService
 
     public void TryAddPlayer(string sessionId, string username)
     {
-        if (Players.Count >= 8) throw new Exception("Game is full!");
+        if (Players.Count >= 4) throw new Exception("Game is full!");
         if (Players.Any(x => x.SessionId == sessionId)) return;
 
         var newPlayer = new Player
@@ -54,6 +54,9 @@ public class PlayerService
             MainClient.ConnectionId = connectionId;
             await SendInitialValues();
         }
+
+        if (MainClient.ClientProxy != null)
+            await MainClient.ClientProxy.SendAsync("PlayerUpdate", Players);
     }
 
     public bool PlayerAlreadyInGame(string sessionId)
@@ -62,9 +65,22 @@ public class PlayerService
         return player != null;
     }
 
-    public void Reset()
+    public async Task Reset(bool samePlayers)
     {
-        Players = new List<Player>();
+        if (!samePlayers) {
+            Players = new List<Player>();
+            MainClient = new MainClient();
+            await All.SendAsync("ResetGame");
+        }
+        else
+        {
+            Players.ForEach(p =>
+            {
+                p.IsReady = false;
+                p.Pictures = new Dictionary<int, string>();
+                p.Points = 0;
+            });
+        }
     }
 
     public Player GetPlayerBySessionId(string sessionId)

@@ -1,12 +1,3 @@
-# Temp Todos:
-- [ ] List Players and ready status
-- [ ] Show Game Stats on game end
-- [ ] `Next Round starts in` Screen
-- [ ] Styling Main Guess Screen
-- [ ] Styling Player Guess Screen
-- [ ] Publish initial values if necessary (on client reload) 
-- [ ] Fix StopGameSequence
-
 # Frontend
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.0.6.
@@ -34,5 +25,3 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
-
-

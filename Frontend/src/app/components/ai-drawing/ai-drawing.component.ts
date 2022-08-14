@@ -37,6 +37,8 @@ export class AiDrawingComponent implements AfterViewInit {
 
   private model!: any;
 
+  shouldDraw = false;
+
   constructor(private hub: IndrawgyHubService) {}
 
   generatePicture() {
@@ -61,16 +63,28 @@ export class AiDrawingComponent implements AfterViewInit {
     this.hub.wordToGuess$
       .pipe(untilDestroyed(this))
       .subscribe(async (doodleNetEntry) => {
+        if (this.model) this.model.reset();
+        this.context?.clearRect(
+          0,
+          0,
+          this.canvas.nativeElement.width,
+          this.canvas.nativeElement.height
+        );
         this.model = await ml5.sketchRNN(doodleNetEntry.key);
+        this.shouldDraw = false;
         setTimeout(async () => {
           await this.hub.startRound();
-          this.generatePicture();
         }, 5000);
       });
+
+    this.hub.roundStart$.pipe(untilDestroyed(this)).subscribe((x) => {
+      this.shouldDraw = true;
+      this.generatePicture();
+    });
   }
 
   draw() {
-    if (this.strokePath) {
+    if (this.strokePath && this.shouldDraw) {
       if (this.previousPen == 'down') {
         this.context?.beginPath();
         this.context?.moveTo(this.x, this.y);

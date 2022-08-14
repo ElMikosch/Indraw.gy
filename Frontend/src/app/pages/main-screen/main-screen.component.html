@@ -1,8 +1,8 @@
 <div class="flex-col flex w-full align-center p-8">
   <ngx-qrcode
     *ngIf="
-      currentGameStatus == GameStatus.open ||
-      currentGameStatus == GameStatus.created
+      (currentGameStatus$ | async) === GameStatus.open ||
+      (currentGameStatus$ | async) === GameStatus.created
     "
     [elementType]="elementType"
     [value]="(sessionService.sessionLink$ | async) ?? ''"
@@ -13,17 +13,17 @@
   <div>
     <span
       class="countdown font-mono text-9xl justify-center"
-      *ngIf="currentGameStatus == GameStatus.started"
+      *ngIf="(currentGameStatus$ | async) === GameStatus.started"
     >
       <span style="--value:{{ this.indrawgyHub.timerUpdate$ | async }};"></span>
     </span>
     <span
       class="font-mono text-9xl justify-center"
-      *ngIf="currentGameStatus == GameStatus.ended"
+      *ngIf="(currentGameStatus$ | async) === GameStatus.ended"
       >Game Ended!</span
     >
     <div
-      *ngIf="currentGameStatus == GameStatus.starting"
+      *ngIf="(currentGameStatus$ | async) === GameStatus.starting"
       class="justify-center"
     >
       <span class="text-5xl">Game starts in: </span>
@@ -36,10 +36,28 @@
   </div>
   <ng-container [ngSwitch]="gameMode">
     <ng-container *ngSwitchCase="GameMode.guess">
-      <app-main-screen-guess></app-main-screen-guess>
+      <ng-container>
+        <app-main-screen-guess></app-main-screen-guess>
+      </ng-container>
     </ng-container>
-    <ng-container *ngSwitchDefault>
+    <ng-container *ngSwitchCase="GameMode.draw">
       <app-game-layout class="w-full h-[79vh]"></app-game-layout>
     </ng-container>
   </ng-container>
+
+  <div class="" *ngIf="(currentGameStatus$ | async) === GameStatus.ended">
+    <button
+      class="btn btn-primary w-full btn-lg mt-4 xl:h-24 3xl:h-24 text-1xl xl:text-3xl 3xl:text-5xl"
+      (click)="resetGame(true)"
+    >
+      Gleiche Spieler
+    </button>
+
+    <button
+      class="btn btn-primary w-full btn-lg mt-4 xl:h-24 3xl:h-24 text-1xl xl:text-3xl 3xl:text-5xl"
+      (click)="resetGame(false)"
+    >
+      Neue Spieler
+    </button>
+  </div>
 </div>
