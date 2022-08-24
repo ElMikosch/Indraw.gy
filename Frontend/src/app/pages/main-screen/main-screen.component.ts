@@ -46,7 +46,6 @@ export class MainScreenComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     this.sessionService.createLoginLink();
     this.gameMode = await this.facade.getGameMode();
-    console.log(this.gameMode);
 
     this.indrawgyHub.allPlayerReady$
       .pipe(untilDestroyed(this))

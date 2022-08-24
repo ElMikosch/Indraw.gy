@@ -31,14 +31,14 @@ namespace Backend.Hubs
             _gameService.BeginGameStartSequence(sessionId);
         }
 
-        public void DrawPoint(Point point)
+        public void DrawPoint(DrawInput input)
         {
-            _playerService.MainClient.ClientProxy.SendAsync("drawPointOnMainClient", point);
+            _playerService.MainClient.ClientProxy.SendAsync("drawPointOnMainClient", input);
         }
 
-        public void DrawLine(Line line)
+        public void DrawLine(DrawInput input)
         {
-            _playerService.MainClient.ClientProxy.SendAsync("drawLineOnMainClient", line);
+            _playerService.MainClient.ClientProxy.SendAsync("drawLineOnMainClient", input);
         }
     }
 }

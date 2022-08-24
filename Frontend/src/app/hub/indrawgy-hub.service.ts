@@ -9,8 +9,7 @@ import { DoodleNetEntry } from '../models/doodle-net-entry';
 import { GameStatus } from '../models/game-status';
 import { Guess } from '../models/guess';
 import { Player } from '../models/player';
-import { Line } from '../models/realtime-models/draw-line';
-import { Point } from '../models/realtime-models/draw-point';
+import { DrawInput } from '../models/realtime-models/draw-point';
 
 @Injectable({
   providedIn: 'root',
@@ -29,8 +28,8 @@ export class IndrawgyHubService {
   allPlayerReady$ = new Observable<boolean>();
   startSequenceTimer$ = new Observable<number>();
   currentGameStatus$ = new Observable<GameStatus>();
-  drawPointOnMainClient$ = new Observable<Point>();
-  drawLineOnMainClient$ = new Observable<Line>();
+  drawPointOnMainClient$ = new Observable<DrawInput>();
+  drawLineOnMainClient$ = new Observable<DrawInput>();
   resetGame$ = new Observable<unknown>();
 
   constructor() {
@@ -46,7 +45,7 @@ export class IndrawgyHubService {
 
     signalRPropNames.forEach((n) => {
       const methodName = n.substr(0, n.length - 1);
-      const subject = new ReplaySubject<any>(1);
+      const subject = new ReplaySubject<any>(0);
       this.hubConnection.on(methodName, (v) => {
         console.debug(`[signalr][${methodName}] ${JSON.stringify(v)}`);
         subject.next(v);
@@ -84,11 +83,11 @@ export class IndrawgyHubService {
     await this.hubConnection.invoke('');
   }
 
-  async drawPoint(data: Point): Promise<void> {
+  async drawPoint(data: DrawInput): Promise<void> {
     await this.hubConnection.invoke('drawPoint', data);
   }
 
-  async drawLine(data: Line): Promise<void> {
+  async drawLine(data: DrawInput): Promise<void> {
     await this.hubConnection.invoke('drawLine', data);
   }
 }

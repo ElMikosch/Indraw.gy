@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { create } from 'simple-drawing-board';
 import { IndrawgyHubService } from 'src/app/hub/indrawgy-hub.service';
 import { DrawService } from 'src/app/services/draw.service';
+declare var ml5: any;
 
 @Component({
   selector: 'app-player-draw',
@@ -17,6 +18,8 @@ export class PlayerDrawComponent implements OnInit {
 
   context!: CanvasRenderingContext2D;
   canvastop!: number;
+  sessionId!: string;
+  classifier: any;
 
   lastx = 0;
   lasty = 0;
@@ -26,7 +29,11 @@ export class PlayerDrawComponent implements OnInit {
     private hub: IndrawgyHubService
   ) {}
 
-  ngOnInit(): void {}
+  async ngOnInit(): Promise<void> {
+    this.sessionId = sessionStorage.getItem('sessionId') || '';
+    this.classifier = await ml5.imageClassifier('DoodleNet');
+    console.log('model loaded');
+  }
 
   ngAfterViewInit(): void {
     this.canvas.nativeElement.style.width = '100%';
@@ -39,51 +46,29 @@ export class PlayerDrawComponent implements OnInit {
     this.canvastop = this.canvas.nativeElement.offsetTop;
 
     const sdb = create(this.canvas.nativeElement);
-    sdb.setLineColor('red');
+    sdb.setLineColor('black');
     sdb.setLineSize(5);
 
-    sdb.observer.on('draw', (coords: any) => {
-      console.log(coords);
-      this.hub.drawLine({ x: coords.x, y: coords.y });
+    sdb.observer.on('draw', async (coords: any) => {
+      this.hub.drawLine({
+        coordinates: {
+          x: coords.x,
+          y: coords.y,
+        },
+        sessionId: this.sessionId,
+      });
+      const lel = await this.classifier.classify(this.canvas.nativeElement);
+      console.log(lel);
     });
 
     sdb.observer.on('drawBegin', (coords: any) => {
-      this.hub.drawPoint({ x: coords.x, y: coords.y });
+      this.hub.drawPoint({
+        coordinates: {
+          x: coords.x,
+          y: coords.y,
+        },
+        sessionId: this.sessionId,
+      });
     });
-
-    // this.context.strokeStyle = '#000000';
-    // this.context.lineCap = 'round';
-    // this.context.lineJoin = 'round';
-    // this.context.lineWidth = 5;
-
-    // this.canvas.nativeElement.ontouchmove = (e: TouchEvent) => {
-    //   e.preventDefault();
-
-    //   var newx = e.touches[0].clientX;
-    //   var newy = e.touches[0].clientY - this.canvastop;
-
-    //   this.drawService.line(this.context, {
-    //     fromx: this.lastx,
-    //     fromy: this.lasty,
-    //     tox: newx,
-    //     toy: newy,
-    //   });
-    //   this.hub.drawLine({
-    //     x: newx,
-    //     y: newy,
-    //   });
-    //   this.lastx = newx;
-    //   this.lasty = newy;
-    // };
-
-    // this.canvas.nativeElement.ontouchstart = (e: TouchEvent) => {
-    //   e.preventDefault();
-
-    //   this.lastx = e.touches[0].clientX;
-    //   this.lasty = e.touches[0].clientY - this.canvastop;
-
-    //   this.drawService.dot(this.context, { x: this.lastx, y: this.lasty });
-    //   this.hub.drawPoint({ x: e.touches[0].clientX, y: e.touches[0].clientY });
-    // };
   }
 }

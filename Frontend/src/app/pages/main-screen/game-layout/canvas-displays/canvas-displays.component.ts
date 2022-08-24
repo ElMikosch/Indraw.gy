@@ -21,6 +21,7 @@ import { DrawService } from 'src/app/services/draw.service';
 export class CanvasDisplaysComponent implements OnInit, AfterViewInit {
   @Input() username!: string;
   @Input() isPlayerReady = false;
+  @Input() sessionId!: string;
 
   @ViewChild('playerCanvas') playerCanvas!: ElementRef<HTMLCanvasElement>;
 
@@ -34,14 +35,6 @@ export class CanvasDisplaysComponent implements OnInit, AfterViewInit {
     private hub: IndrawgyHubService
   ) {}
   ngAfterViewInit(): void {
-    // this.playerCanvas.nativeElement.style.width = '100%';
-    // this.playerCanvas.nativeElement.style.height = '100%';
-
-    // this.playerCanvas.nativeElement.width =
-    //   this.playerCanvas.nativeElement.offsetWidth;
-    // this.playerCanvas.nativeElement.height =
-    //   this.playerCanvas.nativeElement.offsetHeight;
-
     this.context = this.playerCanvas.nativeElement.getContext('2d')!;
     this.canvastop = this.playerCanvas.nativeElement.offsetTop;
 
@@ -52,9 +45,11 @@ export class CanvasDisplaysComponent implements OnInit, AfterViewInit {
 
     this.hub.drawLineOnMainClient$
       .pipe(untilDestroyed(this))
-      .subscribe((coordinates) => {
-        const newx = coordinates.x;
-        const newy = coordinates.y;
+      .subscribe((input) => {
+        if (input.sessionId !== this.sessionId) return;
+        const newx = input.coordinates.x;
+        const newy = input.coordinates.y;
+
         this.drawService.line(this.context, {
           fromx: this.lastx,
           fromy: this.lasty,
@@ -67,9 +62,10 @@ export class CanvasDisplaysComponent implements OnInit, AfterViewInit {
 
     this.hub.drawPointOnMainClient$
       .pipe(untilDestroyed(this))
-      .subscribe((coordinates) => {
-        this.lastx = coordinates.x;
-        this.lasty = coordinates.y;
+      .subscribe((input) => {
+        if (input.sessionId !== this.sessionId) return;
+        this.lastx = input.coordinates.x;
+        this.lasty = input.coordinates.y;
 
         this.drawService.dot(this.context, { x: this.lastx, y: this.lasty });
       });
