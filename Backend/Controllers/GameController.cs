@@ -63,10 +63,10 @@ public class GameController : BaseController
     }
 
     [HttpPost("resetGame")]
-    public IActionResult ResetGame()
+    public IActionResult ResetGame([FromBody] ResetGameRequestDto resetGameRequestDto)
     {
-        _gameService.ResetGame(Request.GetSessionId());
-        _playerService.Reset();
+        _gameService.ResetGame(Request.GetSessionId(), resetGameRequestDto.SamePlayers);
+        _playerService.Reset(resetGameRequestDto.SamePlayers);
         return Ok();
     }
 }

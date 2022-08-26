@@ -25,7 +25,7 @@ public class PlayerService
 
     public void TryAddPlayer(string sessionId, string username)
     {
-        if (Players.Count >= 8) throw new Exception("Game is full!");
+        if (Players.Count >= 4) throw new Exception("Game is full!");
         if (Players.Any(x => x.SessionId == sessionId)) return;
 
         var newPlayer = new Player
@@ -40,7 +40,7 @@ public class PlayerService
         MainClient.ClientProxy.SendAsync("PlayerUpdate", Players);
     }
 
-    public void UpdateConnection(string sessionId, string connectionId, IClientProxy proxy)
+    public async Task UpdateConnection(string sessionId, string connectionId, IClientProxy proxy)
     {
         var player = Players.FirstOrDefault(x => x.SessionId == sessionId);
         if (player != null)
@@ -52,10 +52,11 @@ public class PlayerService
         {
             MainClient.ClientProxy = proxy;
             MainClient.ConnectionId = connectionId;
+            await SendInitialValues();
         }
 
         if (MainClient.ClientProxy != null)
-            MainClient.ClientProxy.SendAsync("PlayerUpdate", Players);
+            await MainClient.ClientProxy.SendAsync("PlayerUpdate", Players);
     }
 
     public bool PlayerAlreadyInGame(string sessionId)
@@ -64,9 +65,22 @@ public class PlayerService
         return player != null;
     }
 
-    public void Reset()
+    public async Task Reset(bool samePlayers)
     {
-        Players = new List<Player>();
+        if (!samePlayers) {
+            Players = new List<Player>();
+            MainClient = new MainClient();
+            await All.SendAsync("ResetGame");
+        }
+        else
+        {
+            Players.ForEach(p =>
+            {
+                p.IsReady = false;
+                p.Pictures = new Dictionary<int, string>();
+                p.Points = 0;
+            });
+        }
     }
 
     public Player GetPlayerBySessionId(string sessionId)
@@ -76,17 +90,15 @@ public class PlayerService
 
     public void SetPlayersReadyState(string sessionId, bool ready)
     {
-        var player = Players.Where(x => x.SessionId == sessionId).FirstOrDefault();
+        var player = Players.FirstOrDefault(x => x.SessionId == sessionId);
         if (player == null) throw new Exception("You're not logged into the game");
         player.IsReady = ready;
         MainClient.ClientProxy.SendAsync("PlayerUpdate", Players);
-        if (Players.All(x => x.IsReady))
-        {
-            MainClient.ClientProxy.SendAsync("AllPlayerReady", true);
-        }
-        else
-        {
-            MainClient.ClientProxy.SendAsync("AllPlayerReady", false);
-        }
+        MainClient.ClientProxy.SendAsync("AllPlayerReady", Players.All(x => x.IsReady));
+    }
+
+    private async Task SendInitialValues()
+    {
+        await MainClient.ClientProxy.SendAsync("PlayerUpdate", Players);
     }
 }

@@ -6,6 +6,7 @@ import {
   NgxQrcodeErrorCorrectionLevels,
   NgxQRCodeModule,
 } from '@techiediaries/ngx-qrcode';
+import { Observable } from 'rxjs';
 import { MainScreenGuessComponent } from 'src/app/components/main-screen-guess/main-screen-guess.component';
 import { IndrawgyHubService } from 'src/app/hub/indrawgy-hub.service';
 import { GameStatus } from 'src/app/models/game-status';
@@ -32,8 +33,8 @@ export class MainScreenComponent implements OnInit {
   public elementType = 'url' as NgxQrcodeElementTypes;
   public errorCorrection = 'L' as NgxQrcodeErrorCorrectionLevels;
   public gameMode!: GameMode;
+  currentGameStatus$!: Observable<GameStatus>;
   GameMode = GameMode;
-  currentGameStatus: GameStatus = GameStatus.created;
   GameStatus = GameStatus;
 
   constructor(
@@ -45,7 +46,6 @@ export class MainScreenComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     this.sessionService.createLoginLink();
     this.gameMode = await this.facade.getGameMode();
-    console.log(this.gameMode);
 
     this.indrawgyHub.allPlayerReady$
       .pipe(untilDestroyed(this))
@@ -53,13 +53,11 @@ export class MainScreenComponent implements OnInit {
         x ? this.facade.startGameSequence() : this.facade.stopGameSequence()
       );
 
-    this.indrawgyHub.currentGameStatus$
-      .pipe(untilDestroyed(this))
-      .subscribe((x) => (this.currentGameStatus = x));
+    this.currentGameStatus$ = this.indrawgyHub.currentGameStatus$;
   }
 
-  async resetGame() {
-    await this.facade.resetGame();
+  async resetGame(samePlayers: boolean) {
+    await this.facade.resetGame(samePlayers);
     location.reload();
   }
 }

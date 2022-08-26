@@ -1,49 +1,49 @@
 <div class="flex-col flex w-full align-center p-8">
-  <ngx-qrcode
-    *ngIf="
-      currentGameStatus == GameStatus.open ||
-      currentGameStatus == GameStatus.created
+  <ngx-qrcode *ngIf="
+      (currentGameStatus$ | async) === GameStatus.open ||
+      (currentGameStatus$ | async) === GameStatus.created
     "
-    [elementType]="elementType"
-    [value]="(sessionService.sessionLink$ | async) ?? ''"
-    class="self-center"
-    [errorCorrectionLevel]="errorCorrection"
-  >
+              [elementType]="elementType"
+              [value]="(sessionService.sessionLink$ | async) ?? ''"
+              class="self-center"
+              [errorCorrectionLevel]="errorCorrection">
   </ngx-qrcode>
-  <div>
-    <span
-      class="countdown font-mono text-9xl justify-center"
-      *ngIf="currentGameStatus == GameStatus.started"
-    >
+  <div class="self-center">
+    <span class="countdown font-mono text-9xl justify-center"
+          *ngIf="(currentGameStatus$ | async) === GameStatus.started">
       <span style="--value:{{ this.indrawgyHub.timerUpdate$ | async }};"></span>
     </span>
-    <span
-      class="font-mono text-9xl justify-center"
-      *ngIf="currentGameStatus == GameStatus.ended"
-      >Game Ended!</span
-    >
-    <div
-      *ngIf="currentGameStatus == GameStatus.starting"
-      class="justify-center"
-    >
+    <span class="font-mono text-9xl justify-center"
+          *ngIf="(currentGameStatus$ | async) === GameStatus.ended">Game Ended!</span>
+    <div *ngIf="(currentGameStatus$ | async) === GameStatus.starting"
+         class="justify-center self-center">
       <span class="text-5xl">Game starts in: </span>
       <span class="countdown font-mono text-9xl">
-        <span
-          style="--value:{{ this.indrawgyHub.startSequenceTimer$ | async }};"
-        ></span>
+        <span style="--value:{{ this.indrawgyHub.startSequenceTimer$ | async }};"></span>
       </span>
     </div>
   </div>
-  <ng-container
-    [ngSwitch]="gameMode"
-  >
+  <ng-container [ngSwitch]="gameMode">
     <ng-container *ngSwitchCase="GameMode.guess">
       <ng-container>
-        <app-main-screen-guess *ngIf="currentGameStatus === GameStatus.started"></app-main-screen-guess>
-      </ng-container> 
+        <app-main-screen-guess></app-main-screen-guess>
+      </ng-container>
     </ng-container>
     <ng-container *ngSwitchCase="GameMode.draw">
       <app-game-layout class="w-full h-[79vh]"></app-game-layout>
     </ng-container>
   </ng-container>
+
+  <div class=""
+       *ngIf="(currentGameStatus$ | async) === GameStatus.ended">
+    <button class="btn btn-primary w-full btn-lg mt-4 xl:h-24 3xl:h-24 text-1xl xl:text-3xl 3xl:text-5xl"
+            (click)="resetGame(true)">
+      Gleiche Spieler
+    </button>
+
+    <button class="btn btn-primary w-full btn-lg mt-4 xl:h-24 3xl:h-24 text-1xl xl:text-3xl 3xl:text-5xl"
+            (click)="resetGame(false)">
+      Neue Spieler
+    </button>
+  </div>
 </div>

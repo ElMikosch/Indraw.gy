@@ -14,7 +14,6 @@ export class SessionService {
 
   createLoginLink(): void {
     const url = `${window.location.origin}/#/login`;
-    console.log(url);
     this.sessionLinkSubject.next(url);
   }
 }

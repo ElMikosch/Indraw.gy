@@ -6,8 +6,8 @@ import { IndrawgyApi } from '../../services/indrawgy.api';
 export class MainScreenFacade {
   constructor(private api: IndrawgyApi) {}
 
-  public async resetGame() {
-    await this.api.post('resetGame', {});
+  public async resetGame(samePlayers: boolean) {
+    await this.api.post('resetGame', { samePlayers });
   }
 
   public async startGameSequence() {

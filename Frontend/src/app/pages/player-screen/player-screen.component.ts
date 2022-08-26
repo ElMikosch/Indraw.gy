@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Observable } from 'rxjs';
 import { PlayerDrawComponent } from 'src/app/components/player-draw/player-draw.component';
 import { IndrawgyHubService } from 'src/app/hub/indrawgy-hub.service';
 import { GameMode } from 'src/app/models/game-mode';
@@ -25,16 +26,18 @@ export class PlayerScreenComponent implements OnInit {
   public gameMode!: GameMode;
   GameMode = GameMode;
 
-  public gameStatus!: GameStatus;
+  public currentGameStatus$!: Observable<GameStatus>;
   GameStatus = GameStatus;
   playerReady = false;
 
   async ngOnInit(): Promise<void> {
     this.gameMode = await this.facade.getGameMode();
-    this.gameStatus = await this.facade.getGameStatus();
+    this.currentGameStatus$ = this.hub.currentGameStatus$;
     this.hub.gameEnded$
       .pipe(untilDestroyed(this))
       .subscribe(() => (this.playerReady = false));
+
+    this.hub.resetGame$.subscribe((x) => location.reload());
   }
 
   changePlayerReadyState(): void {

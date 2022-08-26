@@ -1,15 +1,57 @@
-<ng-container *ngIf="wordToGuess$ | async as word">
-  <app-guess-placeholder [word$]="wordToGuess$"></app-guess-placeholder>
-  <div class="w-72">
+<!-- <div
+  *ngIf="roundEnd"
+  class="fixed inset-0 bg-gray-500 bg-opacity-25 flex justify-center content-center"
+>
+  <span class="text-2xl text-center self-center"
+    >Die nächste Runde startet bald!</span
+  >
+</div> -->
+<ng-container *ngIf="(currentGameStatus$ | async) === GameStatus.created">
+  <div class="flex items-center">
+    <div *ngFor="let player of players$ | async">
+      <div class="indicator m-8">
+        <span class="indicator-item badge"
+              [ngClass]="{
+            'badge-error': !player.isReady,
+            'badge-success': player.isReady
+          }"></span>
+        <div class="grid w-64 h-64 bg-base-300 place-items-center">
+          <span class="text-3xl">
+            {{ player.username }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="(currentGameStatus$ | async) === GameStatus.ended">
+  <div class="stats shadow flex justify-center">
+    <div class="stat stat-primary"
+         *ngFor="let player of players$ | async; let i = index">
+      <div class="stat-title">{{ i + 1 }}. Platz</div>
+      <div class="stat-value">{{ player.username.toLocaleUpperCase() }}</div>
+      <div class="stat-desc">{{ player.points }} Punkte</div>
+    </div>
+  </div>
+</ng-container>
+<ng-container *ngIf="
+    (currentGameStatus$ | async) !== GameStatus.ended &&
+    (wordToGuess$ | async) as word
+  ">
+  <div class="flex flex-col gap-1 items-center">
+    <app-guess-placeholder [word$]="wordToGuess$"></app-guess-placeholder>
     <app-ai-drawing [doodleKey]="word.key"></app-ai-drawing>
   </div>
 
-  <div class="w-full border border-primary mt-8">
-    <span class="text-xl mb-4">Bisherige Vermutungen:</span>
-    <div *ngFor="let g of guessList$ | async">
-      <span *ngIf="!g.isCorrect">{{g.player}}: {{g.guessText}}</span>
+  <div class="w-full h-32 border border-primary mt-8 overflow-y-auto"
+       #scrollList>
+    <span class="text-xl mb-4 ">Bisherige Vermutungen:</span>
+    <div *ngFor="let g of guessList$ | async"
+         class="overflow-y-auto">
+      <span *ngIf="!g.isCorrect">{{ g.player }}: {{ g.guessText }}</span>
       <span *ngIf="g.isCorrect"
-            class="text-green-500">{{g.player}} hat richtig geraten</span>
+            class="text-green-500">{{ g.player }} hat richtig geraten</span>
     </div>
   </div>
 </ng-container>

@@ -41,17 +41,6 @@ public class GameService
         if (GameState.GameStatus == GameStatus.Started) throw new Exception("Game is already running!");
         if (!IsMainClient(sessionId)) throw new Exception("Only the main screen can start the game");
         SetGameStatus(GameStatus.Started);
-        //var maxTime = 60;
-        //Observable.Interval(TimeSpan.FromSeconds(1)).TakeWhile(x => x != maxTime + 1 && GameState.GameStatus == GameStatus.Started).Subscribe(async timer =>
-        //{
-
-        //    await _playerService.MainClient.ClientProxy.SendAsync("TimerUpdate", maxTime - timer);
-        //    if (timer == maxTime)
-        //    {
-        //        EndGame(sessionId);
-        //        return;
-        //    }
-        //});
 
         switch (GameState.GameMode)
         {
@@ -109,15 +98,27 @@ public class GameService
         if (GameState.GameStatus == GameStatus.Ended) throw new Exception("Game hasn't even started!");
         if (!IsMainClient(sessionId)) throw new Exception("Only the main screen can end the game");
         SetGameStatus(GameStatus.Ended);
+        await _playerService.MainClient.ClientProxy.SendAsync("PlayerUpdate", _playerService.Players);
         await _playerService.All.SendAsync("GameEnded");
     }
 
-    public void ResetGame(string sessionId)
+    public void ResetGame(string sessionId, bool samePlayers)
     {
-        //Todo: implement correct resetting with options (Keep player / new players)
         if (!IsMainClient(sessionId)) throw new Exception("Only the main screen can reset the game");
-        SetGameStatus(GameStatus.Created);
-        GameState = new GameState();
+        if (samePlayers)
+        {
+            SetGameStatus(GameStatus.Created);
+            GameState.CurrentDoodle = new();
+            GameState.CurrentRound = 1;
+            GameState.FinishedPlayers = new List<string>();
+            GameState.Guesses = new List<Guess>();
+        }
+        else
+        {
+            SetGameStatus(GameStatus.Open);
+            GameState = new GameState();
+
+        }
     }
 
     public GameStatus GetGameStatus()
@@ -129,7 +130,7 @@ public class GameService
     {
         return GameState.GameMode;
     }
-    
+
     public void SetGameStatus(GameStatus gameStatus)
     {
         GameState.GameStatus = gameStatus;
@@ -163,14 +164,18 @@ public class GameService
     {
         if (GameState.GameStatus == GameStatus.Ended) throw new Exception("Game hasn't even started!");
         if (!IsMainClient(sessionId)) throw new Exception("Only the main screen can start the next round");
-        if (GameState.CurrentRound >= GameState.Rounds) await EndGame(sessionId); //Todo: show scores and
+        if (GameState.CurrentRound > GameState.Rounds)
+        {
+            await EndGame(sessionId);
+            return;
+        }
         const int maxTime = 30;
         GameState.FinishedPlayers = new List<string>();
         GameState.Guesses = new List<Guess>();
         await _playerService.MainClient.ClientProxy.SendAsync("UpdateGuessList", GameState.Guesses);
         await _playerService.All.SendAsync("RoundStart");
-        
-        
+
+
         Timer = Observable.Interval(TimeSpan.FromSeconds(1)).TakeWhile(x => x != maxTime + 1).Subscribe(async timer =>
         {
             await _playerService.MainClient.ClientProxy.SendAsync("TimerUpdate", maxTime - timer);
@@ -181,7 +186,7 @@ public class GameService
 
     private async Task RoundEnd()
     {
-        if(Timer != null) Timer.Dispose();
+        if (Timer != null) Timer.Dispose();
         await _playerService.All.SendAsync("RoundEnd");
         GameState.CurrentRound++;
         await SendWordToGuess();
@@ -189,10 +194,8 @@ public class GameService
 
     public void BeginGameStartSequence(string sessionId)
     {
-        //if(playerService.Players.Count < 2)
-        //{
-        //    return;
-        //}
+        // if (_playerService.Players.Count < 2) return;
+        if(GameState.GameStatus != GameStatus.Created) return;
         var startSequenceTime = 10;
         StartSequenceStopped = false;
         SetGameStatus(GameStatus.Starting);
@@ -201,7 +204,7 @@ public class GameService
             await _playerService.MainClient.ClientProxy.SendAsync("StartSequenceTimer", startSequenceTime - timer);
             if (timer == startSequenceTime)
             {
-               await StartGame(sessionId);
+                await StartGame(sessionId);
             }
         });
     }
@@ -209,7 +212,15 @@ public class GameService
     public void CancelGameStartSequence(string sessionId)
     {
         if (!IsMainClient(sessionId)) throw new Exception("You're not allowed to stop the game start sequence");
+         if(GameState.GameStatus != GameStatus.Starting) return;
         StartSequenceStopped = true;
-        SetGameStatus(GameStatus.Open);
+        SetGameStatus(GameStatus.Created);
+    }
+
+    public async Task SendInitialValues()
+    {
+        await _playerService.All.SendAsync("CurrentGameStatus", GameState.GameStatus);
+        if(!string.IsNullOrEmpty(GameState.CurrentDoodle.Key))
+          await _playerService.All.SendAsync("WordToGuess", GameState.CurrentDoodle);
     }
 }

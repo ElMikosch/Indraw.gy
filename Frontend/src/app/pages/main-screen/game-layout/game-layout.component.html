@@ -1,9 +1,13 @@
-
-<div class="flex flex-row h-full  flex-wrap">
-    <div *ngFor="let player of (indrawgyHub.playerUpdate$ | async); index as i" class="w-[25%] h-[50%]" >
-        <canvas-displays class="w-[25%]" [username]="player.username" [isPlayerReady]="player.isReady" ></canvas-displays>
-    </div>
-</div>
-<div>
-  blaaaa
+<div class="flex flex-row h-full flex-wrap">
+  <div
+    *ngFor="let player of indrawgyHub.playerUpdate$ | async; index as i"
+    class="w-[25%] h-[50%]"
+  >
+    <canvas-displays
+      class="w-[25%]"
+      [username]="player.username"
+      [isPlayerReady]="player.isReady"
+      [sessionId]="player.sessionId"
+    ></canvas-displays>
+  </div>
 </div>
