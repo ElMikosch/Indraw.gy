@@ -7,20 +7,16 @@
   >
 </div> -->
 
-<div class="m-8">
+<div class="m-8 gap-1 flex items-center flex-col">
   <app-guess-placeholder [word$]="wordToGuess$"></app-guess-placeholder>
   <div class="form-control w-full">
-    <input
-      type="text"
-      class="input input-bordered input-lg xl:h-24 3xl:h-24 text-1xl xl:text-3xl 3xl:text-5xl"
-      placeholder="Vermutung"
-      [(ngModel)]="guess"
-    />
-    <button
-      class="btn btn-primary btn-lg mt-4 xl:h-24 3xl:h-24 text-1xl xl:text-3xl 3xl:text-5xl"
-      (click)="sendGuess()"
-      [disabled]="!canGuess()"
-    >
+    <input type="text"
+           class="input input-bordered input-lg xl:h-24 3xl:h-24 text-1xl xl:text-3xl 3xl:text-5xl"
+           placeholder="Vermutung"
+           [(ngModel)]="guess" />
+    <button class="btn btn-primary btn-lg mt-4 xl:h-24 3xl:h-24 text-1xl xl:text-3xl 3xl:text-5xl"
+            (click)="sendGuess()"
+            [disabled]="!canGuess()">
       Absenden!
     </button>
   </div>

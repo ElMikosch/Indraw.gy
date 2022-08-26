@@ -29,7 +29,7 @@ public class GameService
         if (GameState.GameStatus == GameStatus.Started) throw new Exception("Game is already running!");
         GameState = new GameState
         {
-            Rounds = 2,
+            Rounds = rounds,
             GameMode = mode,
             GameStatus = GameStatus.Created,
         };
@@ -220,5 +220,7 @@ public class GameService
     public async Task SendInitialValues()
     {
         await _playerService.All.SendAsync("CurrentGameStatus", GameState.GameStatus);
+        if(!string.IsNullOrEmpty(GameState.CurrentDoodle.Key))
+          await _playerService.All.SendAsync("WordToGuess", GameState.CurrentDoodle);
     }
 }

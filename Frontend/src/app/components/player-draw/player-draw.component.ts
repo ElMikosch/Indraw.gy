@@ -57,7 +57,7 @@ export class PlayerDrawComponent implements OnInit {
         },
         sessionId: this.sessionId,
       });
-      const lel = await this.classifier.classify(this.canvas.nativeElement);
+      const lel = await this.classifier.classify(this.canvas.nativeElement, 3);
       console.log(lel);
     });
 

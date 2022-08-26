@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { map, Observable, startWith } from 'rxjs';
 import { IndrawgyHubService } from 'src/app/hub/indrawgy-hub.service';
@@ -27,6 +27,8 @@ export class MainScreenGuessComponent implements OnInit {
   players$: Observable<Player[]>;
 
   roundEnd: boolean = true;
+
+  @ViewChild('scrollList') scrollList!: ElementRef<HTMLDivElement>;
 
   constructor(private hub: IndrawgyHubService, private api: IndrawgyApi) {
     this.wordToGuess$ = hub.wordToGuess$;
