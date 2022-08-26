@@ -67,7 +67,7 @@ public class GameService
     {
         if (GameState.FinishedPlayers.Contains(sessionId)) return false;
         var player = _playerService.GetPlayerBySessionId(sessionId);
-        var guessCorrect = string.Equals(GameState.CurrentDoodle.Translation, guess,
+        var guessCorrect = string.Equals(GameState.CurrentDoodle.Translation, guess.Trim(),
             StringComparison.CurrentCultureIgnoreCase);
 
         if (guessCorrect)
@@ -188,6 +188,8 @@ public class GameService
     {
         if (Timer != null) Timer.Dispose();
         await _playerService.All.SendAsync("RoundEnd");
+        GameState.Guesses.Add(new Guess { GuessText = GameState.CurrentDoodle.Translation, IsCorrect = false, Player = "Richtiges Wort" });
+        await _playerService.MainClient.ClientProxy.SendAsync("UpdateGuessList", GameState.Guesses);
         GameState.CurrentRound++;
         await SendWordToGuess();
     }
