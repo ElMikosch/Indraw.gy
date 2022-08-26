@@ -2,21 +2,17 @@
   <ngx-qrcode *ngIf="
       (currentGameStatus$ | async) === GameStatus.open ||
       (currentGameStatus$ | async) === GameStatus.created
-    "
-              [elementType]="elementType"
-              [value]="(sessionService.sessionLink$ | async) ?? ''"
-              class="self-center"
-              [errorCorrectionLevel]="errorCorrection">
+    " [elementType]="elementType" [value]="(sessionService.sessionLink$ | async) ?? ''" class="self-center"
+    [errorCorrectionLevel]="errorCorrection">
   </ngx-qrcode>
   <div class="self-center">
     <span class="countdown font-mono text-9xl justify-center"
-          *ngIf="(currentGameStatus$ | async) === GameStatus.started">
+      *ngIf="(currentGameStatus$ | async) === GameStatus.started">
       <span style="--value:{{ this.indrawgyHub.timerUpdate$ | async }};"></span>
     </span>
-    <span class="font-mono text-9xl justify-center"
-          *ngIf="(currentGameStatus$ | async) === GameStatus.ended">Game Ended!</span>
-    <div *ngIf="(currentGameStatus$ | async) === GameStatus.starting"
-         class="justify-center self-center">
+    <span class="font-mono text-9xl justify-center" *ngIf="(currentGameStatus$ | async) === GameStatus.ended">Game
+      Ended!</span>
+    <div *ngIf="(currentGameStatus$ | async) === GameStatus.starting" class="justify-center self-center">
       <span class="text-5xl">Game starts in: </span>
       <span class="countdown font-mono text-9xl">
         <span style="--value:{{ this.indrawgyHub.startSequenceTimer$ | async }};"></span>
@@ -30,19 +26,18 @@
       </ng-container>
     </ng-container>
     <ng-container *ngSwitchCase="GameMode.draw">
-      <app-game-layout class="w-full h-[79vh]"></app-game-layout>
+      <!-- <app-game-layout class="w-full h-[79vh]"></app-game-layout> -->
     </ng-container>
   </ng-container>
 
-  <div class=""
-       *ngIf="(currentGameStatus$ | async) === GameStatus.ended">
+  <div class="" *ngIf="(currentGameStatus$ | async) === GameStatus.ended">
     <button class="btn btn-primary w-full btn-lg mt-4 xl:h-24 3xl:h-24 text-1xl xl:text-3xl 3xl:text-5xl"
-            (click)="resetGame(true)">
+      (click)="resetGame(true)">
       Gleiche Spieler
     </button>
 
     <button class="btn btn-primary w-full btn-lg mt-4 xl:h-24 3xl:h-24 text-1xl xl:text-3xl 3xl:text-5xl"
-            (click)="resetGame(false)">
+      (click)="resetGame(false)">
       Neue Spieler
     </button>
   </div>

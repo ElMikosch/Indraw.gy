@@ -7,6 +7,15 @@ using Backend.Extensions;
 
 namespace Backend.Services;
 
+/// <summary>
+/// Fullfill the GameService!
+/// There are methods that are not yet implemented.
+/// In every of these methods you need to send at least one message to the client via SignalR.
+/// The PlayerService should help with the list of player and the mainClient
+/// You don't need to implement any error handling, but in some methods its required to check if the mainClient is calling the method!
+/// Also, have a look into the frontend, where you find all observables to call :)
+/// </summary>
+
 public class GameService
 {
     private readonly PlayerService _playerService;
@@ -58,48 +67,27 @@ public class GameService
 
     private async Task SendWordToGuess()
     {
-        var randomDoodle = GetRandomDoodleNetEntry();
-        GameState.CurrentDoodle = randomDoodle;
-        await _playerService.All.SendAsync("WordToGuess", randomDoodle);
+        //Send a random doodle 
+        //Use method GetRandomDoodleNetEntry()
     }
 
     public async Task<bool> GuessWord(string sessionId, string guess)
     {
-        if (GameState.FinishedPlayers.Contains(sessionId)) return false;
-        var player = _playerService.GetPlayerBySessionId(sessionId);
-        var guessCorrect = string.Equals(GameState.CurrentDoodle.Translation, guess.Trim(),
-            StringComparison.CurrentCultureIgnoreCase);
+        //Implement GuessWord logic
+        //When the player guesses correctly he gets points like this:
+        //1st Place = 5 Points
+        //2nd Place = 3 Points
+        //3rd Place = 2 Points
+        //Correct Guess inside time frame = 1 Point
+        //If all players are finished the round should end
 
-        if (guessCorrect)
-        {
-            var currentFinishedPlayers = GameState.FinishedPlayers.Count;
-            player.Points += currentFinishedPlayers > 0 ? Math.Max(5 - (currentFinishedPlayers + 1), 1) : 5;
-            GameState.FinishedPlayers.Add(sessionId);
-        }
-
-        GameState.Guesses.Add(new Guess
-        {
-            Player = player.Username,
-            GuessText = guess,
-            IsCorrect = guessCorrect
-        });
-
-        if (GameState.FinishedPlayers.Count == _playerService.Players.Count)
-        {
-            await RoundEnd();
-        }
-
-        await _playerService.MainClient.ClientProxy.SendAsync("UpdateGuessList", GameState.Guesses);
-        return guessCorrect;
+        return true;
     }
 
     public async Task EndGame(string sessionId)
     {
-        if (GameState.GameStatus == GameStatus.Ended) throw new Exception("Game hasn't even started!");
-        if (!IsMainClient(sessionId)) throw new Exception("Only the main screen can end the game");
-        SetGameStatus(GameStatus.Ended);
-        await _playerService.MainClient.ClientProxy.SendAsync("PlayerUpdate", _playerService.Players);
-        await _playerService.All.SendAsync("GameEnded");
+        //Implement GameEnd logic
+        //Use setGameMode to update the GameMode
     }
 
     public void ResetGame(string sessionId, bool samePlayers)
@@ -162,26 +150,10 @@ public class GameService
 
     public async Task StartNextRound(string sessionId)
     {
-        if (GameState.GameStatus == GameStatus.Ended) throw new Exception("Game hasn't even started!");
-        if (!IsMainClient(sessionId)) throw new Exception("Only the main screen can start the next round");
-        if (GameState.CurrentRound > GameState.Rounds)
-        {
-            await EndGame(sessionId);
-            return;
-        }
-        const int maxTime = 30;
-        GameState.FinishedPlayers = new List<string>();
-        GameState.Guesses = new List<Guess>();
-        await _playerService.MainClient.ClientProxy.SendAsync("UpdateGuessList", GameState.Guesses);
-        await _playerService.All.SendAsync("RoundStart");
-
-
-        Timer = Observable.Interval(TimeSpan.FromSeconds(1)).TakeWhile(x => x != maxTime + 1).Subscribe(async timer =>
-        {
-            await _playerService.MainClient.ClientProxy.SendAsync("TimerUpdate", maxTime - timer);
-            if (timer != maxTime) return;
-            await RoundEnd();
-        });
+        //Implement StartNextRound logic
+        //Timer should be 30 seconds for each round
+        //Use GameState to save finishedPlayers and all Guesses
+        //When timer ends, the round should end 
     }
 
     private async Task RoundEnd()
@@ -196,19 +168,10 @@ public class GameService
 
     public void BeginGameStartSequence(string sessionId)
     {
-        // if (_playerService.Players.Count < 2) return;
-        if(GameState.GameStatus != GameStatus.Created) return;
-        var startSequenceTime = 10;
-        StartSequenceStopped = false;
-        SetGameStatus(GameStatus.Starting);
-        Observable.Interval(TimeSpan.FromSeconds(1)).TakeWhile(x => x != startSequenceTime + 1 && !StartSequenceStopped).Subscribe(async timer =>
-        {
-            await _playerService.MainClient.ClientProxy.SendAsync("StartSequenceTimer", startSequenceTime - timer);
-            if (timer == startSequenceTime)
-            {
-                await StartGame(sessionId);
-            }
-        });
+        //Implement the game start sequence 
+        //The sequence should last 10 seconds before the actual game starts
+        //When StartSequenceStopped is true, the timer should be stopped/disposed
+        //The game status is "Starting
     }
 
     public void CancelGameStartSequence(string sessionId)

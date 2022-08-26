@@ -34,7 +34,7 @@ export class PlayerGuessComponent {
     this.wordToGuess$ = this.hub.wordToGuess$;
     this.isRoundRunning = false;
 
-    this.hub.roundStart$.pipe(untilDestroyed(this)).subscribe((_) => {
+    this.hub.roundStart$.pipe(untilDestroyed(this)).subscribe(() => {
       this.isRoundRunning = true;
       this.guessCorrect = false;
       this.guessList = [];
@@ -42,9 +42,9 @@ export class PlayerGuessComponent {
 
     this.hub.roundEnd$
       .pipe(untilDestroyed(this))
-      .subscribe((_) => (this.isRoundRunning = false));
+      .subscribe(() => (this.isRoundRunning = false));
 
-    this.hub.wordToGuess$.pipe(untilDestroyed(this)).subscribe((x) => {
+    this.hub.wordToGuess$.pipe(untilDestroyed(this)).subscribe(() => {
       this.guessCorrect = false;
       this.guessList = [];
     });

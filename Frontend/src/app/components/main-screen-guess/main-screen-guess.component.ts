@@ -34,7 +34,7 @@ export class MainScreenGuessComponent implements OnInit {
     this.wordToGuess$ = hub.wordToGuess$;
     this.guessList$ = hub.updateGuessList$;
     this.players$ = hub.playerUpdate$.pipe(
-      map((players) => players.sort((a, z) => z.points - a.points))
+      map((players: Player[]) => players.sort((a, z) => z.points - a.points))
     );
   }
 
@@ -46,9 +46,9 @@ export class MainScreenGuessComponent implements OnInit {
 
     this.hub.roundEnd$
       .pipe(untilDestroyed(this))
-      .subscribe((x) => (this.roundEnd = true));
+      .subscribe(() => (this.roundEnd = true));
     this.hub.roundStart$
       .pipe(untilDestroyed(this))
-      .subscribe((x) => (this.roundEnd = false));
+      .subscribe(() => (this.roundEnd = false));
   }
 }

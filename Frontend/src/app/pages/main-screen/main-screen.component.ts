@@ -12,19 +12,13 @@ import { IndrawgyHubService } from 'src/app/hub/indrawgy-hub.service';
 import { GameStatus } from 'src/app/models/game-status';
 import { SessionService } from 'src/app/services/session.service';
 import { GameMode } from '../../models/game-mode';
-import { GameLayoutComponent } from './game-layout/game-layout.component';
 import { MainScreenFacade } from './main-screen.facade';
 
 @UntilDestroy()
 @Component({
   selector: 'app-main-screen',
   standalone: true,
-  imports: [
-    CommonModule,
-    NgxQRCodeModule,
-    GameLayoutComponent,
-    MainScreenGuessComponent,
-  ],
+  imports: [CommonModule, NgxQRCodeModule, MainScreenGuessComponent],
   providers: [MainScreenFacade],
   templateUrl: './main-screen.component.html',
   styleUrls: ['./main-screen.component.scss'],
@@ -49,7 +43,7 @@ export class MainScreenComponent implements OnInit {
 
     this.indrawgyHub.allPlayerReady$
       .pipe(untilDestroyed(this))
-      .subscribe((x) =>
+      .subscribe((x: boolean) =>
         x ? this.facade.startGameSequence() : this.facade.stopGameSequence()
       );
 
