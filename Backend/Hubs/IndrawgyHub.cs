@@ -4,31 +4,13 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace Backend.Hubs
 {
-    public class IndrawgyHub : Hub
+    public class IndrawgyHub 
     {
-        private readonly PlayerService _playerService;
-        private readonly GameService _gameService;
-
-        public IndrawgyHub(PlayerService playerService, GameService gameService)
-        {
-            _playerService = playerService;
-            _gameService = gameService;
-        }
-
-        public async Task Register(string sessionId)
-        {
-            await _playerService.UpdateConnection(sessionId, Context.ConnectionId, Clients.Caller);
-            await _gameService.SendInitialValues();
-        }
-
-        public async Task StartRound(string sessionId)
-        {
-            await _gameService.StartNextRound(sessionId);
-        }
-
-        public void BeginGameStartSequence(string sessionId)
-        {
-            _gameService.BeginGameStartSequence(sessionId);
-        }
+        // Create and register hub (Path: 'hubs/indrawgy')
+        // Implement the hub with following methods
+        // Register
+        // StartRound
+        // BeginGameStartSequence
+        // Call the corresponding methods in Player- and GameService
     }
 }
