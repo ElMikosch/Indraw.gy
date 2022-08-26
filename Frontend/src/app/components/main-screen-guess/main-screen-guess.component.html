@@ -25,8 +25,8 @@
 </ng-container>
 
 <ng-container *ngIf="(currentGameStatus$ | async) === GameStatus.ended">
-  <div class="stats shadow flex justify-center">
-    <div class="stat stat-primary" *ngFor="let player of players$ | async; let i = index">
+  <div class="stats shadow flex flex-wrap justify-center">
+    <div class="stat stat-primary w-96" *ngFor="let player of players$ | async; let i = index">
       <div class="stat-title">{{ i + 1 }}. Platz</div>
       <div class="stat-value">{{ player.username.toLocaleUpperCase() }}</div>
       <div class="stat-desc">{{ player.points }} Punkte</div>
